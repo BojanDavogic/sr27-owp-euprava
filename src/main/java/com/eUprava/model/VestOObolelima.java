@@ -1,21 +1,22 @@
 package com.eUprava.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class VestOObolelima {
-    private int id;
+    private Long id;
     private int oboleliUDanu;
     private int testiraniUDanu;
     private int ukupnoOboleli;
     private int hospitalizovani;
     private int pacijentiNaRespiratoru;
-    private Date datumIVremeObjavljivanja;
+    private LocalDateTime datumIVremeObjavljivanja;
 
     public VestOObolelima() {
     }
 
-    public VestOObolelima(int id, int oboleliUDanu, int testiraniUDanu, int ukupnoOboleli,
-                          int hospitalizovani, int pacijentiNaRespiratoru, Date datumIVremeObjavljivanja) {
+    public VestOObolelima(Long id, int oboleliUDanu, int testiraniUDanu, int ukupnoOboleli,
+                          int hospitalizovani, int pacijentiNaRespiratoru, LocalDateTime datumIVremeObjavljivanja) {
         this.id = id;
         this.oboleliUDanu = oboleliUDanu;
         this.testiraniUDanu = testiraniUDanu;
@@ -25,11 +26,11 @@ public class VestOObolelima {
         this.datumIVremeObjavljivanja = datumIVremeObjavljivanja;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -73,11 +74,11 @@ public class VestOObolelima {
         this.pacijentiNaRespiratoru = pacijentiNaRespiratoru;
     }
 
-    public Date getDatumIVremeObjavljivanja() {
+    public LocalDateTime getDatumIVremeObjavljivanja() {
         return datumIVremeObjavljivanja;
     }
 
-    public void setDatumIVremeObjavljivanja(Date datumIVremeObjavljivanja) {
+    public void setDatumIVremeObjavljivanja(LocalDateTime datumIVremeObjavljivanja) {
         this.datumIVremeObjavljivanja = datumIVremeObjavljivanja;
     }
 

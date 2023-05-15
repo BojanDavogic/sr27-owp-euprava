@@ -1,7 +1,7 @@
 package com.eUprava.model;
 
 public class Vakcina {
-    private int id;
+    private Long id;
     private String ime;
     private int dostupnaKolicina;
     private ProizvodjacVakcine proizvodjac;
@@ -9,18 +9,18 @@ public class Vakcina {
     public Vakcina() {
     }
 
-    public Vakcina(int id, String ime, int dostupnaKolicina, ProizvodjacVakcine proizvodjac) {
+    public Vakcina(Long id, String ime, int dostupnaKolicina, ProizvodjacVakcine proizvodjac) {
         this.id = id;
         this.ime = ime;
         this.dostupnaKolicina = dostupnaKolicina;
         this.proizvodjac = proizvodjac;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

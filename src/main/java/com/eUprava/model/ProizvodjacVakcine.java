@@ -1,24 +1,24 @@
 package com.eUprava.model;
 
 public class ProizvodjacVakcine {
-    private int id;
+    private Long id;
     private String proizvodjac;
     private String drzavaProizvodnje;
 
     public ProizvodjacVakcine() {
     }
 
-    public ProizvodjacVakcine(int id, String proizvodjac, String drzavaProizvodnje) {
+    public ProizvodjacVakcine(Long id, String proizvodjac, String drzavaProizvodnje) {
         this.id = id;
         this.proizvodjac = proizvodjac;
         this.drzavaProizvodnje = drzavaProizvodnje;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

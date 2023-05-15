@@ -8,7 +8,7 @@ public interface KorisnikService {
     Korisnik findKorisnik(Long id);
     Korisnik findKorisnikByEmail(String email);
     Korisnik findKorisnikByEmailAndPassword(String email, String lozinka);
-    List<Korisnik> findKorisnici();
+    List<Korisnik> findSviKorisnici();
     Korisnik save(Korisnik korisnik);
     Korisnik update(Korisnik korisnik);
     Korisnik delete(Long id);

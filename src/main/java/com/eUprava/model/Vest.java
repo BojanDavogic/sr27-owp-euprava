@@ -2,27 +2,29 @@ package com.eUprava.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
+
 public class Vest {
-    private int id;
+    private Long id;
     private String nazivVesti;
     private String sadrzaj;
-    private DateTimeFormat datumIVremeObjavljivanja;
+    private LocalDateTime datumIVremeObjavljivanja;
 
     public Vest() {
     }
 
-    public Vest(int id, String nazivVesti, String sadrzaj, DateTimeFormat datumIVremeObjavljivanja) {
+    public Vest(Long id, String nazivVesti, String sadrzaj, LocalDateTime datumIVremeObjavljivanja) {
         this.id = id;
         this.nazivVesti = nazivVesti;
         this.sadrzaj = sadrzaj;
         this.datumIVremeObjavljivanja = datumIVremeObjavljivanja;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -42,11 +44,11 @@ public class Vest {
         this.sadrzaj = sadrzaj;
     }
 
-    public DateTimeFormat getDatumIVremeObjavljivanja() {
+    public LocalDateTime getDatumIVremeObjavljivanja() {
         return datumIVremeObjavljivanja;
     }
 
-    public void setDatumIVremeObjavljivanja(DateTimeFormat datumIVremeObjavljivanja) {
+    public void setDatumIVremeObjavljivanja(LocalDateTime datumIVremeObjavljivanja) {
         this.datumIVremeObjavljivanja = datumIVremeObjavljivanja;
     }
 

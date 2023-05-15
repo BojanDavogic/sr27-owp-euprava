@@ -86,7 +86,7 @@ public class KorisnikDAOImpl implements KorisnikDAO {
     }
 
     @Override
-    public List<Korisnik> findKorisnici() {
+    public List<Korisnik> findSviKorisnici() {
 
         String query =  " SELECT * FROM korisnici " +
                         "ORDER BY id";
@@ -94,7 +94,7 @@ public class KorisnikDAOImpl implements KorisnikDAO {
         jdbcTemplate.query(query, korisnikRowCallBackHandler);
         return korisnikRowCallBackHandler.getKorisnici();
     }
-
+    @Transactional
     @Override
     public Boolean save(Korisnik korisnik) {
 
@@ -102,7 +102,7 @@ public class KorisnikDAOImpl implements KorisnikDAO {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
                 String query =  "INSERT INTO korisnici (email, lozinka, ime, prezime, datumRodjenja, jmbg, adresa, brojTelefona, datumIVremeRegistracije, uloga" +
-                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                 PreparedStatement preparedStatement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 int index = 1;
@@ -128,7 +128,7 @@ public class KorisnikDAOImpl implements KorisnikDAO {
     @Override
     public Boolean update(Korisnik korisnik) {
 
-        String query = " UPDATE korisnik SET ime = ?, prezime = ? WHERE id = ?";
+        String query = " UPDATE korisnici SET ime = ?, prezime = ? WHERE id = ?";
         int uspeh = jdbcTemplate.update(query, korisnik.getIme(), korisnik.getPrezime(), korisnik.getId());
         return uspeh > 0;
     }

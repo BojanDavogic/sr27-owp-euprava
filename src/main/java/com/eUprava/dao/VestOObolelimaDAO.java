@@ -5,9 +5,9 @@ import com.eUprava.model.VestOObolelima;
 import java.util.List;
 
 public interface VestOObolelimaDAO {
-    public VestOObolelima findOne(Long id);
-    public List<VestOObolelima> findAll();
+    public VestOObolelima findVestOObolelima(Long id);
+    public List<VestOObolelima> findSveVestiOObolelima();
     public Boolean save(VestOObolelima vestObolelima);
-    public Boolean update(VestOObolelima vestObolelima);
+    public Boolean update(VestOObolelima vestOObolelima);
     public Boolean delete(Long id);
 }

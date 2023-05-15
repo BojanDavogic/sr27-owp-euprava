@@ -5,8 +5,8 @@ import com.eUprava.model.ProizvodjacVakcine;
 import java.util.List;
 
 public interface ProizvodjacVakcineService {
-    ProizvodjacVakcine findOne(Long id);
-    List<ProizvodjacVakcine> findAll();
+    ProizvodjacVakcine findProizvodjacVakcine(Long id);
+    List<ProizvodjacVakcine> findSviProizvodjaciVakcine();
     ProizvodjacVakcine save(ProizvodjacVakcine proizvodjacVakcine);
     ProizvodjacVakcine update(ProizvodjacVakcine proizvodjacVakcine);
     ProizvodjacVakcine delete(Long id);

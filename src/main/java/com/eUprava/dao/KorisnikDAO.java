@@ -8,7 +8,7 @@ public interface KorisnikDAO {
     public Korisnik findKorisnik(Long id);
     public Korisnik findKorisnikByEmail(String email);
     public Korisnik findKorisnikByEmailAndPassword(String email, String lozinka);
-    public List<Korisnik> findKorisnici();
+    public List<Korisnik> findSviKorisnici();
     public Boolean save(Korisnik korisnik);
     public Boolean update(Korisnik korisnik);
     public Boolean delete(Long id);

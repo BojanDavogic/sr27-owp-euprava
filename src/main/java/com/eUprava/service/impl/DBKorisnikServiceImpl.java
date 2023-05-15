@@ -27,8 +27,8 @@ public class DBKorisnikServiceImpl implements KorisnikService {
     }
 
     @Override
-    public List<Korisnik> findKorisnici() {
-        return korisnikDAO.findKorisnici();
+    public List<Korisnik> findSviKorisnici() {
+        return korisnikDAO.findSviKorisnici();
     }
 
     @Override
