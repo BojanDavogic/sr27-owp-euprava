@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>EUprava</title>
+    <link rel="stylesheet" href="../style/prijavaStyle.css">
+    <base href="/eUprava/">
+</head>
+<body>
+<form method="post" action="korisnici/prijava">
+    <table>
+        <caption>Prijava korisnika na eUpravu</caption>
+        <tr>
+            <th>Unesite email:</th>
+            <td>
+                <input type="text" value="" name="email" required />
+            </td>
+        </tr>
+        <tr>
+            <th>Unesite lozinku:</th>
+            <td>
+                <input type="password" value="" name="lozinka" required />
+            </td>
+        </tr>
+        <tr th:if="${greska != null}">
+            <td colspan="2" class="error" th:text="${greska}"></td>
+        </tr>
+        <tr>
+            <th></th>
+            <td>
+                <input type="submit" value="Prijavi se" required />
+            </td>
+        </tr>
+    </table>
+</form>
+<ul>
+    <li>
+        <a href="korisnici/registracija">Registruj se</a>
+    </li>
+</ul>
+</body>
+</html>

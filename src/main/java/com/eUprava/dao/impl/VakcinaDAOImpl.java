@@ -9,13 +9,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
+@Repository
 public class VakcinaDAOImpl implements VakcinaDAO {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
@@ -119,7 +120,44 @@ public class VakcinaDAOImpl implements VakcinaDAO {
 
     @Override
     public List<Vakcina> sortVakcine(String sort) {
-        return null;
+
+        if(sort.contains("Rastuci|Kolicina")) {
+            String query = "SELECT id, ime, kolicina, proizvodjacId FROM vakcine " +
+                            "ORDER BY kolicina ASC";
+            VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
+            jdbcTemplate.query(query, vakcinaRowCallBackHandler);
+            return vakcinaRowCallBackHandler.getVakcine();
+        }
+        else if(sort.contains("Opadajuci|Kolicina")){
+            String query = "SELECT id, ime, kolicina, proizvodjacId FROM vakcine " +
+                            "ORDER BY kolicina DESC";
+            VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
+            jdbcTemplate.query(query, vakcinaRowCallBackHandler);
+            return vakcinaRowCallBackHandler.getVakcine();
+        }
+        else if(sort.contains("Naziv-Proizvodjaca")){
+            String query = "SELECT v.id, v.ime, v.kolicina, p.proizvodjacId FROM vakcine v, proizvodjaciVakcina p " +
+                            "WHERE p.id = v.proizvodjacId " +
+                            "ORDER BY p.proizvodjac";
+            VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
+            jdbcTemplate.query(query, vakcinaRowCallBackHandler);
+            return vakcinaRowCallBackHandler.getVakcine();
+        }
+        else if(sort.contains("Drzava-Proizvodjaca")){
+            String query = "SELECT v.id, v.ime, v.kolicina, v.proizvodjacId FROM vakcine v, proizvodjaciVakcina p " +
+                            "WHERE p.id = v.proizvodjacId " +
+                            "ORDER BY p.drzavaProizvodnje";
+            VakcinaRowCallBackHandler rowCallBackHandler = new VakcinaRowCallBackHandler();
+            jdbcTemplate.query(query, rowCallBackHandler);
+            return rowCallBackHandler.getVakcine();
+        }
+        else {
+            String query = "SELECT id, ime, kolicina, proizvodjacId from vakcine " +
+                            "ORDER BY id";
+            VakcinaRowCallBackHandler rowCallBackHandler = new VakcinaRowCallBackHandler();
+            jdbcTemplate.query(query, rowCallBackHandler);
+            return rowCallBackHandler.getVakcine();
+        }
     }
 
     @Override

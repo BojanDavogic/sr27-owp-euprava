@@ -4,9 +4,10 @@ import com.eUprava.dao.KorisnikDAO;
 import com.eUprava.model.Korisnik;
 import com.eUprava.service.KorisnikService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class DBKorisnikServiceImpl implements KorisnikService {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired

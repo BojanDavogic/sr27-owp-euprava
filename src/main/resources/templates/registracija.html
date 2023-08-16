@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registracija</title>
+    <link rel="stylesheet" href="../style/registracijaStyle.css">
+    <base href="/eUprava/">
+</head>
+<body>
+  <form method="post" action="korisnici/registracija">
+    <table>
+      <caption>Registracija korisnika na eUpravu</caption>
+      <tr>
+        <th>Unesite email:</th>
+        <td>
+          <input type="text" value="" name="email" required />
+        </td>
+      </tr>
+      <tr>
+        <th>Unesite lozinku:</th>
+        <td>
+          <input type="password" value="" name="lozinka" required />
+        </td>
+      </tr>
+      <tr>
+        <th>Unesite ime:</th>
+        <td>
+          <input type="text" value="" name="ime" required />
+        </td>
+      </tr>
+      <tr>
+        <th>Unesite prezime:</th>
+        <td>
+          <input type="text" value="" name="prezime" required />
+        </td>
+      </tr>
+      <tr>
+        <th>Unesite datum rodjenja:</th>
+        <td>
+          <input type="date" value="" name="datumRodjenja" required />
+        </td>
+      </tr>
+      <tr>
+        <th>Unesite jmbg:</th>
+        <td>
+          <input type="text" value="" name="jmbg" required />
+        </td>
+      </tr>
+      <tr>
+        <th>Unesite adresu:</th>
+        <td>
+          <input type="text" value="" name="adresa" required />
+        </td>
+      </tr>
+      <tr>
+        <th>Unesite broj telefona:</th>
+        <td>
+          <input type="text" value="" name="brojTelefona" required />
+        </td>
+      </tr>
+      <tr>
+        <th></th>
+        <td>
+          <input type="submit" value="Registruj se" required />
+        </td>
+      </tr>
+    </table>
+  </form>
+  <ul>
+    <li>
+      <a href="korisnici/prijava">Prijavi se</a>
+    </li>
+  </ul>
+</body>
+</html>

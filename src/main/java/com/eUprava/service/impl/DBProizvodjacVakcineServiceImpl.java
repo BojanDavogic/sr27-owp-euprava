@@ -5,9 +5,10 @@ import com.eUprava.dao.ProizvodjacVakcineDAO;
 import com.eUprava.model.ProizvodjacVakcine;
 import com.eUprava.service.ProizvodjacVakcineService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
-
+@Controller
 public class DBProizvodjacVakcineServiceImpl implements ProizvodjacVakcineService {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
