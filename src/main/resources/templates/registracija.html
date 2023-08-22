@@ -1,67 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Registracija</title>
+    <title>Registracija na eUpravu</title>
     <link rel="stylesheet" href="../style/registracijaStyle.css">
+    <script th:src="@{/js/registracija.js}"></script>
     <base href="/eUprava/">
 </head>
 <body>
-  <form method="post" action="korisnici/registracija">
+  <form id="registrationForm" method="post" action="korisnici/registracija">
     <table>
       <caption>Registracija korisnika na eUpravu</caption>
       <tr>
         <th>Unesite email:</th>
         <td>
-          <input type="text" value="" name="email" required />
+          <input id="emailRegistracija" type="email" value="" name="email" />
+          <p class="error-message errorEmail"></p>
         </td>
       </tr>
       <tr>
         <th>Unesite lozinku:</th>
         <td>
-          <input type="password" value="" name="lozinka" required />
+          <input id="lozinkaRegistracija" type="password" value="" name="lozinka" />
+          <p class="error-message errorLozinka"></p>
+        </td>
+      </tr>
+      <tr>
+        <th>Unesite ponovljenu lozinku:</th>
+        <td>
+          <input id="ponovljenaLozinkaRegistracija" type="password" value="" name="lozinkaPotvrda" />
+          <p class="error-message errorPonovljenaLozinka"></p>
         </td>
       </tr>
       <tr>
         <th>Unesite ime:</th>
         <td>
-          <input type="text" value="" name="ime" required />
+          <input id="imeRegistracija" type="text" value="" name="ime" />
+          <p class="error-message errorIme"></p>
         </td>
       </tr>
       <tr>
         <th>Unesite prezime:</th>
         <td>
-          <input type="text" value="" name="prezime" required />
+          <input id="prezimeRegistracija" type="text" value="" name="prezime" />
+          <p class="error-message errorPrezime"></p>
         </td>
       </tr>
       <tr>
         <th>Unesite datum rodjenja:</th>
         <td>
-          <input type="date" value="" name="datumRodjenja" required />
+          <input id="datumRodjenjaRegistracija" type="date" value="" name="datumRodjenja" />
+          <p class="error-message errorDatumRodjenja"></p>
         </td>
       </tr>
       <tr>
         <th>Unesite jmbg:</th>
         <td>
-          <input type="text" value="" name="jmbg" required />
+          <input id="jmbgRegistracija" type="text" value="" name="jmbg" />
+          <p class="error-message errorJmbg"></p>
         </td>
       </tr>
       <tr>
         <th>Unesite adresu:</th>
         <td>
-          <input type="text" value="" name="adresa" required />
+          <input id="adresaRegistracija" type="text" value="" name="adresa" />
+          <p class="error-message errorAdresa"></p>
         </td>
       </tr>
       <tr>
         <th>Unesite broj telefona:</th>
         <td>
-          <input type="text" value="" name="brojTelefona" required />
+          <input id="telefonRegistracija" type="text" value="" name="brojTelefona" />
+          <p class="error-message errorTelefon"></p>
         </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="error" id="greska"></td>
       </tr>
       <tr>
         <th></th>
         <td>
-          <input type="submit" value="Registruj se" required />
+          <input id="btnRegistracija" type="submit" value="Registruj se"/>
         </td>
       </tr>
     </table>

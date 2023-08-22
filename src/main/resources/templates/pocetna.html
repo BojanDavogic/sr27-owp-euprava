@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Početna strana</title>
+    <link rel="stylesheet" th:href="@{/style/pocetnaStyle.css}">
+    <link rel="stylesheet" th:href="@{/style/fragmentsStyle.css}">
+    <script th:src="@{/js/pocetna.js}"></script>
+    <base href="/eUprava/">
+</head>
+<body>
+<div class="header">
+    <h1>Početna stranica eUprave</h1>
+    <a class="odjava-btn" href="korisnici/odjava">Odjavi se</a>
+</div>
+<nav class="nav-bar">
+    <ul>
+        <li><a th:href="@{korisnici/pocetna}">Početna</a></li>
+        <li><a th:href="@{/vesti}">Vesti</a></li>
+        <li><a th:href="@{/vesti/oboleli}">Vesti o obolelima</a></li>
+        <!-- Dodajte ostale linkove prema potrebi -->
+    </ul>
+</nav>
+<div class="unos-vesti">
+    <h2>Unos nove vesti</h2>
+    <form method="post" action="dodavanjeVesti">
+        <label for="naziv">Naziv:</label>
+        <input type="text" id="naziv" name="naziv" required><br>
+
+        <label for="sadrzaj">Sadržaj:</label>
+        <textarea id="sadrzaj" name="sadrzaj" required></textarea><br>
+
+        <input type="submit" value="Objavi vest" class="dugme-unos">
+    </form>
+
+</div>
+
+<div class="vesti">
+    <h2>Vesti</h2>
+    <div class="objave">
+        <!-- Statistika za trenutni datum kao istaknuta objava -->
+        <div id="statistika" th:if="${istaknutaVest}" th:classappend="${'objava istaknuta'}" class="objava">
+            <h3>Statistički izveštaj za datum: <span th:text="${#temporals.format(istaknutaVest.datumIVremeObjavljivanja, 'dd.MM.yyyy.')}"></span></h3>
+            <hr style="font-weight: bold">
+            <p>Broj zaraženih: <span th:text="${istaknutaVest.oboleliUDanu}"></span></p>
+            <p>Broj testiranih: <span th:text="${istaknutaVest.testiraniUDanu}"></span></p>
+            <p>Broj hospitalizovanih: <span th:text="${istaknutaVest.hospitalizovani}"></span></p>
+            <p>Broj pacijenata na respiratoru: <span th:text="${istaknutaVest.pacijentiNaRespiratoru}"></span></p>
+            <p style="font-weight: bold">Ukupan broj zaraženih: <span th:text="${istaknutaVest.ukupnoOboleli}"></span></p>
+        </div>
+
+<!--        <div th:fragment="vesti">-->
+        <div th:each="vest : ${sveVesti}" class="objava" th:data-id="${vest.id}">
+            <h3 th:text="${vest.naziv}"></h3>
+            <p th:text="${vest.sadrzaj}"></p>
+            <p class="datum" th:text="${#temporals.format(vest.datumIVremeObjavljivanja, 'dd.MM.yyyy. HH:mm')}"></p>
+            <div class="dugmad">
+                <button class="izmena-dugme" onclick="openModal('${vest.naziv}', '${vest.sadrzaj}', '${vest.id}')">Izmeni</button>
+                <button class="brisanje-dugme">Obriši</button>
+            </div>
+        </div>
+
+        <!--        </div>-->
+    </div>
+</div>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <form id="izmenaForma" action="" method="post">
+        <input type="hidden" id="vestId" name="vestId">
+            <label class="labele" for="nazivIzmena">Naziv:</label>
+            <input type="text" id="nazivIzmena" name="nazivIzmena" required><br>
+            <label class="labele" for="sadrzajIzmena">Sadržaj:</label>
+            <textarea id="sadrzajIzmena" name="sadrzajIzmena" required></textarea><br>
+            <button type="submit">Potvrdi izmenu</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+

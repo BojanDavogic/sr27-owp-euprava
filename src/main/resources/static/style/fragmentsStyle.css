@@ -1,0 +1,67 @@
+.objave {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.objava {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+    background-color: white;
+    position: relative;
+}
+
+#statistika {
+    color: white;
+    background-color: #01575f;
+    margin-bottom: 50px;
+}
+
+#statistika h3 {
+    margin-bottom: 30px;
+}
+
+.datum {
+    position: absolute;
+    top: 2px;
+    right: 10px;
+    color: #888;
+    font-size: 12px;
+}
+
+/* Stil za dugmad */
+.dugmad {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.izmena-dugme {
+    background-color: yellow;
+    width: 40%;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    border: 2px solid black;
+    border-radius: 6px;
+}
+
+.brisanje-dugme {
+    background-color: red;
+    color: white;
+    width: 40%;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    border: 2px solid black;
+    border-radius: 6px;
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/style/fragmentsStyle.css}">
+</head>
+<body>
+<!-- Fragment za prikaz vesti -->
+<div th:fragment="vesti">
+  <div th:each="vest : ${sveVesti}" class="objava">
+    <h3 th:text="${vest.naziv}"></h3>
+    <p th:text="${vest.sadrzaj}"></p>
+    <p class="datum" th:text="${#temporals.format(vest.datumIVremeObjavljivanja, 'dd.MM.yyyy. HH:mm')}"></p>
+    <div class="dugmad">
+      <button class="izmena-dugme">Izmeni</button>
+      <button class="brisanje-dugme">Obriši</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

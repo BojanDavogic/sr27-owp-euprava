@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>eUprava</title>
+    <link rel="stylesheet" th:href="@{/style/indexStyle.css}">
+    <link rel="stylesheet" th:href="@{/style/fragmentsStyle.css}">
+    <base href="/eUprava/">
+</head>
+<body>
+<div class="header">
+    <h1>Dobrodošli na eUpravu</h1>
+    <a class="prijava-btn" href="korisnici/prijava">Prijavi se</a>
+</div>
+<!--<div class="statistika">-->
+<!--    <h2>Statistički izveštaj</h2>-->
+<!--    <ul>-->
+<!--        <li th:each="vest : ${statistikaVesti}" class="objava">-->
+<!--            <h3>Statistički izveštaj za datum: <span th:text="${#dates.format(vest.datumIVremeObjavljivanja, 'yyyy-MM-dd')}"></span></h3>-->
+<!--            <p>Broj zaraženih: <span th:text="${vest.oboleliUDanu}"></span></p>-->
+<!--            &lt;!&ndash; Dodajte ostale statističke podatke &ndash;&gt;-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</div>-->
+<div class="vesti">
+    <h2>Vesti</h2>
+    <div class="objave">
+        <!-- Statistika za trenutni datum kao istaknuta objava -->
+        <div id="statistika" th:if="${istaknutaVest}" th:classappend="${'objava istaknuta'}" class="objava">
+            <h3>Statistički izveštaj za datum: <span th:text="${#temporals.format(istaknutaVest.datumIVremeObjavljivanja, 'dd.MM.yyyy.')}"></span></h3>
+            <hr style="font-weight: bold">
+            <p>Broj zaraženih: <span th:text="${istaknutaVest.oboleliUDanu}"></span></p>
+            <p>Broj testiranih: <span th:text="${istaknutaVest.testiraniUDanu}"></span></p>
+            <p>Broj hospitalizovanih: <span th:text="${istaknutaVest.hospitalizovani}"></span></p>
+            <p>Broj pacijenata na respiratoru: <span th:text="${istaknutaVest.pacijentiNaRespiratoru}"></span></p>
+            <p style="font-weight: bold">Ukupan broj zaraženih: <span th:text="${istaknutaVest.ukupnoOboleli}"></span></p>
+        </div>
+
+        <div th:each="vest : ${sveVesti}" class="objava">
+            <h3 th:text="${vest.naziv}"></h3>
+            <p th:text="${vest.sadrzaj}"></p>
+            <p class="datum" th:text="${#temporals.format(vest.datumIVremeObjavljivanja, 'dd.MM.yyyy. HH:mm')}"></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

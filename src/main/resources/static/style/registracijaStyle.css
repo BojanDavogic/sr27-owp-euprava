@@ -6,7 +6,7 @@ body {
 }
 
 form {
-    width: 400px;
+    width: 600px;
     margin: 0 auto;
     background-color: #fff;
     padding: 20px;
@@ -33,6 +33,7 @@ td {
     padding: 10px;
 }
 
+input[type="email"],
 input[type="text"],
 input[type="password"],
 input[type="date"] {
@@ -73,4 +74,11 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    position: absolute;
+    margin-top: 0px;
 }

@@ -1,21 +1,17 @@
 package com.eUprava.dao.impl;
 
-import com.eUprava.dao.ProizvodjacVakcineDAO;
 import com.eUprava.dao.VestDAO;
-import com.eUprava.model.ProizvodjacVakcine;
-import com.eUprava.model.Vakcina;
 import com.eUprava.model.Vest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -51,7 +47,7 @@ public class VestDAOImpl implements VestDAO {
     public Vest findVest(Long id) {
         String query = "SELECT id, naziv, sadrzaj, datumIVremeObjavljivanja FROM vesti" +
                         " WHERE id = ?" +
-                        "ORDER BY id";
+                        " ORDER BY id";
 
         VestDAOImpl.VestRowCallBackHandler vestRowCallBackHandler = new VestDAOImpl.VestRowCallBackHandler();
         jdbcTemplate.query(query, vestRowCallBackHandler, id);
@@ -69,7 +65,7 @@ public class VestDAOImpl implements VestDAO {
 
         return vestRowCallBackHandler.getVesti();
     }
-
+    @Transactional
     @Override
     public Boolean save(Vest vest) {
         PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
@@ -78,7 +74,7 @@ public class VestDAOImpl implements VestDAO {
                 String query = "INSERT INTO vesti (naziv, sadrzaj, datumIVremeObjavljivanja) VALUES (?, ?, ?)";
                 PreparedStatement preparedStatement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 int index = 1 ;
-                preparedStatement.setString(index++, vest.getNazivVesti());
+                preparedStatement.setString(index++, vest.getNaziv());
                 preparedStatement.setString(index++, vest.getSadrzaj());
                 preparedStatement.setTimestamp(index++, Timestamp.valueOf(vest.getDatumIVremeObjavljivanja()));
 
@@ -91,18 +87,18 @@ public class VestDAOImpl implements VestDAO {
         int uspeh = jdbcTemplate.update(preparedStatementCreator, generatedKeyHolder);
         return uspeh > 0;
     }
-
+    @Transactional
     @Override
     public Boolean delete(Long id) {
         String query = "DELETE FROM vesti WHERE id = ?";
         int obrisan = jdbcTemplate.update(query, id);
         return obrisan > 0;
     }
-
+    @Transactional
     @Override
     public Boolean update(Vest vest) {
         String query = " UPDATE vesti SET naziv = ?, sadrzaj = ?, datumIVremeObjavljivanja = ? WHERE id = ?";
-        int uspeh = jdbcTemplate.update(query, vest.getNazivVesti(), vest.getSadrzaj(), vest.getDatumIVremeObjavljivanja(), vest.getId());
+        int uspeh = jdbcTemplate.update(query, vest.getNaziv(), vest.getSadrzaj(), vest.getDatumIVremeObjavljivanja(), vest.getId());
         return uspeh > 0;
     }
 }

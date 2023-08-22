@@ -13,7 +13,7 @@ CREATE TABLE eUprava.Korisnici (
     adresa VARCHAR(255) NOT NULL,
     brojTelefona INT,
     datumIVremeRegistracije DATETIME NOT NULL,
-    uloga ENUM("MedicinskoOsoblje", "Pacijent", "Administrator") NOT NULL,
+    uloga ENUM('MedicinskoOsoblje', 'Pacijent', 'Administrator') NOT NULL,
 	PRIMARY KEY(id)
 );
 
@@ -46,7 +46,6 @@ CREATE TABLE eUprava.VestiOObolelima (
 	id BIGINT AUTO_INCREMENT,
     oboleliUDanu int not null,
     testiraniUDanu int not null,
-    ukupnoOboleli int not null,
     hospitalizovani int not null,
     pacijentiNaRespiratoru int not null,
     datumIVremeObjavljivanja datetime not null,
@@ -96,22 +95,37 @@ CREATE TABLE eUprava.PrijaveZaVakcine(
 
 
 
-INSERT INTO Korisnici VALUES(1, 'boki@gmail.com', "boki123", "Bojan", "Davogic", '2001-10-14', "1410001345496", "Dositejeva 22, Novi Sad", 062456322, now(), "Administrator");
-INSERT INTO Korisnici VALUES(2, 'peraperic@gmail.com', "pera123", "Petar", "Peric", '2001-12-12', "1212001345496", "Safarikova 3, Novi Sad", 062333444, now(), "MedicinskoOsoblje");
-INSERT INTO Korisnici VALUES(3, 'adam@gmail.com', "adam123", "Adam", "Adamovic", '2001-12-21', "2112001345496", "Marsilijeva 21, Novi Sad", 062333555, now(), "Pacijent");
+INSERT INTO Korisnici VALUES(1, 'boki@gmail.com', 'boki123', 'Bojan', 'Davogic', '2001-10-14', '1410001345496', 'Dositejeva 22, Novi Sad', 062456322, now(), 'Administrator');
+INSERT INTO Korisnici VALUES(2, 'peraperic@gmail.com', 'pera123', 'Petar', 'Peric', '2001-12-12', '1212001345496', 'Safarikova 3, Novi Sad', 062333444, now(), 'MedicinskoOsoblje');
+INSERT INTO Korisnici VALUES(3, 'adam@gmail.com', 'adam123', 'Adam', 'Adamovic', '2001-12-21', '2112001345496', 'Marsilijeva 21, Novi Sad', 062333555, now(), 'Pacijent');
 
-INSERT INTO ProizvodjaciVakcine VALUES(1, "Hemofarm", "Nemacka");
-INSERT INTO ProizvodjaciVakcine VALUES(2, "Acimadem", "Srbija");
+INSERT INTO ProizvodjaciVakcine VALUES(1, 'Hemofarm', 'Nemacka');
+INSERT INTO ProizvodjaciVakcine VALUES(2, 'Acimadem', 'Srbija');
 
-INSERT INTO Vakcine VALUES (1, "Pulteni", 500, 1);
-INSERT INTO Vakcine VALUES (2, "Kokerens", 1000, 2);
+INSERT INTO Vakcine VALUES (1, 'Pulteni', 500, 1);
+INSERT INTO Vakcine VALUES (2, 'Kokerens', 1000, 2);
 
-INSERT INTO Vesti VALUES (1, "Berentiko", "Ovaj tekst je sadrzaj vesti", now());
+INSERT INTO Vesti VALUES (1, 'Berentiko', 'Ovaj tekst je sadrzaj vesti', now());
 
-INSERT INTO VestiOObolelima VALUES (1, 12, 250, 60, 20, 2, now());
+INSERT INTO VestiOObolelima VALUES (1, 12, 60, 20, 2, now());
 
 INSERT INTO PrimljeneDoze VALUES(1, 1, now(), 3);
 
-INSERT INTO NabavkaVakcina VALUES (1, 500, "Nestasica", now(), 2, 1, "Nedovoljan broj podataka", "Odbijen");
+INSERT INTO NabavkaVakcina VALUES (1, 500, 'Nestasica', now(), 2, 1, 'Nedovoljan broj podataka', 'Odbijen');
 
 INSERT INTO PrijaveZaVakcine VALUES (1, now(), 1, 1);
+
+CREATE FUNCTION getUkupnoOboleli(vestId INT) RETURNS INT
+    READS SQL DATA
+    DETERMINISTIC
+BEGIN
+    DECLARE ukupnoOboleli INT;
+
+    SELECT SUM(oboleliUDanu)
+    INTO ukupnoOboleli
+    FROM VestiOObolelima
+    WHERE DATE(datumIVremeObjavljivanja) <= (SELECT DATE(datumIVremeObjavljivanja) FROM VestiOObolelima WHERE id = vestId);
+
+    RETURN ukupnoOboleli;
+END;
+

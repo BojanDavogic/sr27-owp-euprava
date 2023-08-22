@@ -21,7 +21,7 @@ public class EUpravaApplication extends SpringBootServletInitializer {
 
 	@Bean
 	public RedirectView redirect() {
-		return new RedirectView("/eUprava/prijava.html");
+		return new RedirectView("/eUprava/index.html");
 	}
 
 }

@@ -45,6 +45,11 @@ public class KorisnikController {
         return "prijava.html";
     }
 
+//    @GetMapping(path = "/pocetna")
+//    public String prikaziPocetnuStranicu() {
+//        return "pocetna.html";
+//    }
+
 
     @PostMapping(value = "/prijava")
     public String postLogin(@RequestParam(required = false) String email, @RequestParam(required = false) String lozinka, HttpSession httpSession, RedirectAttributes redirectAttributes) throws IOException {
@@ -59,7 +64,14 @@ public class KorisnikController {
         }
 
         httpSession.setAttribute(KORISNIK_KEY, korisnik);
-        return "redirect:/pocetna.html";
+        return "redirect:/korisnici/pocetna";
+    }
+
+    @GetMapping("/odjava")
+    public String odjava(HttpSession httpSession) {
+        httpSession.invalidate();
+
+        return "redirect:/";
     }
 
     @GetMapping(value = "/registracija")
@@ -69,7 +81,6 @@ public class KorisnikController {
 
     @PostMapping(value = "/registracija")
     public String registerUser(@RequestParam String email, @RequestParam String lozinka, @RequestParam String ime, @RequestParam String prezime, @RequestParam Date datumRodjenja, @RequestParam String jmbg, @RequestParam String adresa, @RequestParam int brojTelefona, HttpSession httpSession, RedirectAttributes redirectAttributes) throws IOException {
-        // Provera da li korisnik sa unetim email-om već postoji u bazi podataka
         Korisnik existingKorisnik = korisnikService.findKorisnikByEmail(email);
         if (existingKorisnik != null) {
             String greska = "Korisnik sa unetim email-om već postoji";

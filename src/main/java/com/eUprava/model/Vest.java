@@ -1,21 +1,19 @@
 package com.eUprava.model;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDateTime;
 
 public class Vest {
     private Long id;
-    private String nazivVesti;
+    private String naziv;
     private String sadrzaj;
     private LocalDateTime datumIVremeObjavljivanja;
 
     public Vest() {
     }
 
-    public Vest(Long id, String nazivVesti, String sadrzaj, LocalDateTime datumIVremeObjavljivanja) {
+    public Vest(Long id, String naziv, String sadrzaj, LocalDateTime datumIVremeObjavljivanja) {
         this.id = id;
-        this.nazivVesti = nazivVesti;
+        this.naziv = naziv;
         this.sadrzaj = sadrzaj;
         this.datumIVremeObjavljivanja = datumIVremeObjavljivanja;
     }
@@ -28,12 +26,12 @@ public class Vest {
         this.id = id;
     }
 
-    public String getNazivVesti() {
-        return nazivVesti;
+    public String getNaziv() {
+        return naziv;
     }
 
-    public void setNazivVesti(String nazivVesti) {
-        this.nazivVesti = nazivVesti;
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
     }
 
     public String getSadrzaj() {
@@ -56,7 +54,7 @@ public class Vest {
     public String toString() {
         return "Vest{" +
                 "Id=" + id +
-                ", NazivVesti='" + nazivVesti + '\'' +
+                ", NazivVesti='" + naziv + '\'' +
                 ", Sadrzaj='" + sadrzaj + '\'' +
                 ", DatumIVremeObjavljivanja=" + datumIVremeObjavljivanja +
                 '}';
