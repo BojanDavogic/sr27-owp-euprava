@@ -77,16 +77,17 @@ a {
 }
 
 .unos-vesti {
-    margin: 20px auto;
-    width: 80%;
+    margin: 50px auto;
     padding: 20px;
     background-color: #f5f5f5;
     border-radius: 4px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 800px;
 }
 
 .unos-vesti h2 {
-    color: #333;
+    text-align: center;
 }
 
 .unos-vesti label {
@@ -94,9 +95,9 @@ a {
     margin-bottom: 5px;
 }
 
-.unos-vesti input,
+.unos-vesti input[type="text"],
 .unos-vesti textarea {
-    width: 100%;
+    width: 97%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -105,16 +106,52 @@ a {
 }
 
 .dugme-unos {
-    padding: 10px 20px;
+    margin-top: 20px;
     background-color: #01575f;
     color: #fff;
     border: none;
+    padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
+    width: 50%;
+    max-width: 200px;
+    align-self: center;
 }
 
 .dugme-unos:hover {
     background-color: #004e55;
+}
+
+.unos-statistike {
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 800px;
+}
+
+.unos-statistike h2 {
+    text-align: center;
+}
+
+.unos-statistike form, .unos-vesti form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.unos-statistike label {
+    margin-bottom: 5px;
+}
+
+.unos-statistike input[type="number"] {
+    width: 97%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .vesti h2 {

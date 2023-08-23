@@ -19,6 +19,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.security.Principal;
 import java.sql.Date;
 import java.time.LocalDateTime;
 
@@ -62,7 +63,7 @@ public class KorisnikController {
             redirectAttributes.addFlashAttribute("greska", greska);
             return "redirect:/korisnici/prijava";
         }
-
+        System.out.println("Korisnik postavljen u sesiju: " + korisnik.getUloga());
         httpSession.setAttribute(KORISNIK_KEY, korisnik);
         return "redirect:/korisnici/pocetna";
     }
@@ -109,5 +110,13 @@ public class KorisnikController {
 
         // Redirekcija na željenu stranicu nakon uspešne registracije (npr. na stranicu za prijavu)
         return "redirect:/korisnici/prijava";
+    }
+
+    @GetMapping(value = "/profil")
+    public String profilKorisnika(Model model, Principal principal){
+        String email = principal.getName();
+        Korisnik korisnik = korisnikService.findKorisnikByEmail(email);
+        model.addAttribute("korisnik", korisnik);
+        return "user";
     }
 }

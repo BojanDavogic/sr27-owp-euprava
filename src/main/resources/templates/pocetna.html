@@ -16,23 +16,39 @@
 <nav class="nav-bar">
     <ul>
         <li><a th:href="@{korisnici/pocetna}">Početna</a></li>
-        <li><a th:href="@{/vesti}">Vesti</a></li>
-        <li><a th:href="@{/vesti/oboleli}">Vesti o obolelima</a></li>
+        <li><a th:href="@{/vakcine}">Vakcine</a></li>
+        <li><a th:href="@{/profil}">Profil</a></li>
         <!-- Dodajte ostale linkove prema potrebi -->
     </ul>
 </nav>
-<div class="unos-vesti">
+<p style="position: absolute; top: 0; right: 0; margin: 5px;" id="korisnik"><span th:text="${#httpSession.getAttribute('korisnik').uloga}"></span></p>
+<div th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).Administrator}" class="unos-vesti">
     <h2>Unos nove vesti</h2>
     <form method="post" action="dodavanjeVesti">
         <label for="naziv">Naziv:</label>
         <input type="text" id="naziv" name="naziv" required><br>
-
         <label for="sadrzaj">Sadržaj:</label>
         <textarea id="sadrzaj" name="sadrzaj" required></textarea><br>
 
         <input type="submit" value="Objavi vest" class="dugme-unos">
     </form>
+</div>
 
+<!-- Forma za unos statistike -->
+<div th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).Administrator} and !${istaknutaVest}" class="unos-statistike">
+    <h2>Unos vesti o obolelima</h2>
+    <form method="post" action="dodavanjeStatistike">
+        <label for="oboleli">Broj obolelih:</label>
+        <input type="number" id="oboleli" name="oboleli" required><br>
+        <label for="testirani">Broj testiranih:</label>
+        <input type="number" id="testirani" name="testirani" required><br>
+        <label for="hospitalizovani">Broj hospitalizovanih:</label>
+        <input type="number" id="hospitalizovani" name="hospitalizovani" required><br>
+        <label for="pacijentiNaRespiratoru">Broj pacijenata na respiratoru:</label>
+        <input type="number" id="pacijentiNaRespiratoru" name="pacijentiNaRespiratoru" required><br>
+
+        <input type="submit" value="Objavi statistiku" class="dugme-unos">
+    </form>
 </div>
 
 <div class="vesti">
@@ -54,7 +70,7 @@
             <h3 th:text="${vest.naziv}"></h3>
             <p th:text="${vest.sadrzaj}"></p>
             <p class="datum" th:text="${#temporals.format(vest.datumIVremeObjavljivanja, 'dd.MM.yyyy. HH:mm')}"></p>
-            <div class="dugmad">
+            <div th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).Administrator}" class="dugmad">
                 <button class="izmena-dugme" onclick="openModal('${vest.naziv}', '${vest.sadrzaj}', '${vest.id}')">Izmeni</button>
                 <button class="brisanje-dugme">Obriši</button>
             </div>
