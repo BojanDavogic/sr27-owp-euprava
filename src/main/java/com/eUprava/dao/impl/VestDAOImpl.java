@@ -32,10 +32,11 @@ public class VestDAOImpl implements VestDAO {
             String naziv = rs.getString(index++);
             String sadrzaj = rs.getString(index++);
             LocalDateTime datumIVremeObjavljivanja = rs.getTimestamp(index++).toLocalDateTime();
+            boolean jeObrisan = Boolean.valueOf(rs.getString(index++));
 
             Vest vest = vesti.get(id);
             if(vest == null) {
-                vest = new Vest(id, naziv, sadrzaj, datumIVremeObjavljivanja);
+                vest = new Vest(id, naziv, sadrzaj, datumIVremeObjavljivanja, jeObrisan);
                 vesti.put(vest.getId(), vest);
             }
         }
@@ -45,9 +46,9 @@ public class VestDAOImpl implements VestDAO {
     }
     @Override
     public Vest findVest(Long id) {
-        String query = "SELECT id, naziv, sadrzaj, datumIVremeObjavljivanja FROM vesti" +
-                        " WHERE id = ?" +
-                        " ORDER BY id";
+        String query = "SELECT * FROM vesti " +
+                        "WHERE id = ? AND jeObrisan = 0 " +
+                        "ORDER BY id";
 
         VestDAOImpl.VestRowCallBackHandler vestRowCallBackHandler = new VestDAOImpl.VestRowCallBackHandler();
         jdbcTemplate.query(query, vestRowCallBackHandler, id);
@@ -57,8 +58,9 @@ public class VestDAOImpl implements VestDAO {
 
     @Override
     public List<Vest> findSveVesti() {
-        String query = "SELECT id, naziv, sadrzaj, datumIVremeObjavljivanja FROM vesti" +
-                        " ORDER BY id";
+        String query = "SELECT * FROM vesti " +
+                        "WHERE jeObrisan = 0 " +
+                        "ORDER BY id";
 
         VestDAOImpl.VestRowCallBackHandler vestRowCallBackHandler = new VestDAOImpl.VestRowCallBackHandler();
         jdbcTemplate.query(query, vestRowCallBackHandler);
@@ -71,12 +73,13 @@ public class VestDAOImpl implements VestDAO {
         PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                String query = "INSERT INTO vesti (naziv, sadrzaj, datumIVremeObjavljivanja) VALUES (?, ?, ?)";
+                String query = "INSERT INTO vesti (naziv, sadrzaj, datumIVremeObjavljivanja, jeObrisan) VALUES (?, ?, ?, ?)";
                 PreparedStatement preparedStatement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 int index = 1 ;
                 preparedStatement.setString(index++, vest.getNaziv());
                 preparedStatement.setString(index++, vest.getSadrzaj());
                 preparedStatement.setTimestamp(index++, Timestamp.valueOf(vest.getDatumIVremeObjavljivanja()));
+                preparedStatement.setBoolean(index++, vest.isJeObrisan());
 
 
                 return preparedStatement;
@@ -90,15 +93,15 @@ public class VestDAOImpl implements VestDAO {
     @Transactional
     @Override
     public Boolean delete(Long id) {
-        String query = "DELETE FROM vesti WHERE id = ?";
+        String query = "UPDATE vesti SET jeObrisan = 1 WHERE id = ?";
         int obrisan = jdbcTemplate.update(query, id);
         return obrisan > 0;
     }
     @Transactional
     @Override
     public Boolean update(Vest vest) {
-        String query = " UPDATE vesti SET naziv = ?, sadrzaj = ?, datumIVremeObjavljivanja = ? WHERE id = ?";
-        int uspeh = jdbcTemplate.update(query, vest.getNaziv(), vest.getSadrzaj(), vest.getDatumIVremeObjavljivanja(), vest.getId());
+        String query = "UPDATE vesti SET naziv = ?, sadrzaj = ? WHERE id = ?";
+        int uspeh = jdbcTemplate.update(query, vest.getNaziv(), vest.getSadrzaj(), vest.getId());
         return uspeh > 0;
     }
 }

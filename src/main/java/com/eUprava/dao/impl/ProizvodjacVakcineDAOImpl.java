@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -29,10 +30,11 @@ public class ProizvodjacVakcineDAOImpl implements ProizvodjacVakcineDAO {
             Long id = rs.getLong(index++);
             String proizvodjac = rs.getString(index++);
             String drzavaProizvodnje = rs.getString(index++);
+            boolean jeObrisan = Boolean.valueOf(rs.getString(index++));
 
             ProizvodjacVakcine proizvodjacVakcine = proizvodjaciVakcine.get(id);
             if(proizvodjacVakcine == null){
-                proizvodjacVakcine = new ProizvodjacVakcine(id, proizvodjac, drzavaProizvodnje);
+                proizvodjacVakcine = new ProizvodjacVakcine(id, proizvodjac, drzavaProizvodnje, jeObrisan);
                 proizvodjaciVakcine.put(proizvodjacVakcine.getId(), proizvodjacVakcine);
             }
         }
@@ -43,8 +45,8 @@ public class ProizvodjacVakcineDAOImpl implements ProizvodjacVakcineDAO {
 
     @Override
     public ProizvodjacVakcine findProizvodjacVakcine(Long id) {
-        String query = "SELECT * FROM proizvodjacivakcine" +
-                        "WHERE id = ? " +
+        String query = "SELECT * FROM proizvodjacivakcine " +
+                        "WHERE id = ? AND jeObrisan = 0 " +
                         "ORDER BY id";
         ProizvodjacVakcineRowCallBackHandler proizvodjacVakcineRowCallBackHandler = new ProizvodjacVakcineRowCallBackHandler();
         jdbcTemplate.query(query, proizvodjacVakcineRowCallBackHandler, id);
@@ -54,25 +56,27 @@ public class ProizvodjacVakcineDAOImpl implements ProizvodjacVakcineDAO {
     @Override
     public List<ProizvodjacVakcine> findSviProizvodjaciVakcine() {
 
-        String query = "SELECT * FROM proizvodjacivakcine" +
+        String query = "SELECT * FROM proizvodjacivakcine " +
+                        "WHERE jeObrisan = 0 " +
                         "ORDER BY id";
         ProizvodjacVakcineRowCallBackHandler proizvodjacVakcineRowCallBackHandler = new ProizvodjacVakcineRowCallBackHandler();
         jdbcTemplate.query(query, proizvodjacVakcineRowCallBackHandler);
         return proizvodjacVakcineRowCallBackHandler.getProizvodjaciVakcine();
     }
-
+    @Transactional
     @Override
     public Boolean save(ProizvodjacVakcine proizvodjacVakcine) {
         PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                String query = "INSERT INTO proizvodjacivakcine (proizvodjac, drzavaProizvodnje)" +
-                                "VALUES (?, ?)";
+                String query = "INSERT INTO proizvodjacivakcine (proizvodjac, drzavaProizvodnje, jeObrisan)" +
+                                "VALUES (?, ?, ?)";
 
                 PreparedStatement preparedStatement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 int index = 1;
                 preparedStatement.setString(index++, proizvodjacVakcine.getProizvodjac());
                 preparedStatement.setString(index++, proizvodjacVakcine.getDrzavaProizvodnje());
+                preparedStatement.setBoolean(index++, proizvodjacVakcine.isJeObrisan());
 
                 return preparedStatement;
             }
@@ -81,17 +85,17 @@ public class ProizvodjacVakcineDAOImpl implements ProizvodjacVakcineDAO {
         int uspeh = jdbcTemplate.update(preparedStatementCreator, generatedKeyHolder);
         return uspeh > 0;
     }
-
+    @Transactional
     @Override
     public Boolean update(ProizvodjacVakcine proizvodjacVakcine) {
         String query = " UPDATE proizvodjacivakcine SET proizvodjac = ?, drzavaProizvodnje = ? WHERE id = ?";
         int uspeh = jdbcTemplate.update(query, proizvodjacVakcine.getProizvodjac(), proizvodjacVakcine.getDrzavaProizvodnje(), proizvodjacVakcine.getId());
         return uspeh > 0;
     }
-
+    @Transactional
     @Override
     public Boolean delete(Long id) {
-        String query = "DELETE FROM proizvodjacivakcine WHERE id = ?";
+        String query = "UPDATE proizvodjacivakcine SET jeObrisan = 1 WHERE id = ?";
         int obrisan = jdbcTemplate.update(query, id);
         return obrisan > 0;
     }

@@ -44,22 +44,23 @@
     margin-top: 10px;
 }
 
-.izmena-dugme {
+.izmena-dugme, .izmena-dugme-statistika {
     background-color: yellow;
     width: 40%;
     border: none;
     padding: 5px;
     cursor: pointer;
-    margin-bottom: 10px;
+    margin-top: 20px;
     border: 2px solid black;
     border-radius: 6px;
 }
 
-.brisanje-dugme {
+.brisanje-dugme, .brisanje-dugme-statistika {
     background-color: red;
     color: white;
     width: 40%;
     border: none;
+    margin-top: 20px;
     padding: 5px;
     cursor: pointer;
     border: 2px solid black;

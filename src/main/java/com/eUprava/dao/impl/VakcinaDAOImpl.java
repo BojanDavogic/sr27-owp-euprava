@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -35,10 +36,11 @@ public class VakcinaDAOImpl implements VakcinaDAO {
             int dostupnaKolicina = rs.getInt(index++);
             Long proizvodjacId = rs.getLong(index++);
             ProizvodjacVakcine proizvodjac = proizvodjacVakcineDAO.findProizvodjacVakcine(proizvodjacId);
+            boolean jeObrisan = Boolean.valueOf(rs.getString(index++));
 
             Vakcina vakcina = vakcine.get(id);
             if(vakcina == null) {
-                vakcina = new Vakcina(id, ime, dostupnaKolicina, proizvodjac);
+                vakcina = new Vakcina(id, ime, dostupnaKolicina, proizvodjac, jeObrisan);
                 vakcine.put(vakcina.getId(), vakcina);
             }
         }
@@ -49,8 +51,8 @@ public class VakcinaDAOImpl implements VakcinaDAO {
 
     @Override
     public Vakcina findVakcina(Long id) {
-        String query = "SELECT v.id, v.ime, v.dostupnaKolicina, p.proizvodjacVakcineId FROM vakcine v, proizvodjacivakcine p " +
-                "WHERE v.id=? " +
+        String query = "SELECT v.id, v.ime, v.dostupnaKolicina, p.proizvodjacVakcineId FROM vakcine v, proizvodjaciVakcine p " +
+                "WHERE v.id = ? AND v.jeObrisan = 0 " +
                 "ORDER BY v.id";
 
         VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
@@ -61,8 +63,8 @@ public class VakcinaDAOImpl implements VakcinaDAO {
 
     @Override
     public Vakcina findVakcinaByNaziv(String nazivProizvodjaca) {
-        String sql = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId FROM vakcine v, proizvodjacivakcine p " +
-                "WHERE v.proizvodjacVakcineId = p.id  AND p.proizvodjac = ? " +
+        String sql = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId FROM vakcine v, proizvodjaciVakcine p " +
+                "WHERE v.proizvodjacVakcineId = p.id  AND p.proizvodjac = ? AND v.jeObrisan = 0 " +
                 "ORDER BY v.id";
 
         VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
@@ -73,8 +75,8 @@ public class VakcinaDAOImpl implements VakcinaDAO {
 
     @Override
     public Vakcina findVakcinaByDrzava(String drzavaProizvodnje) {
-        String sql = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId FROM vakcine v, proizvodjacivakcine p " +
-                "WHERE v.proizvodjacVakcineId = p.id  AND p.drzavaProizvodnje = ? " +
+        String sql = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId FROM vakcine v, proizvodjaciVakcine p " +
+                "WHERE v.proizvodjacVakcineId = p.id  AND p.drzavaProizvodnje = ? AND v.jeObrisan = 0 " +
                 "ORDER BY v.id";
 
         VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
@@ -110,7 +112,7 @@ public class VakcinaDAOImpl implements VakcinaDAO {
         if(argumenti)
             query=query + whereQuery.toString() + " ORDER BY v.id";
         else
-            query=query + "ORDER BY v.id";
+            query=query + " ORDER BY v.id";
         System.out.println(query);
 
         VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
@@ -136,7 +138,7 @@ public class VakcinaDAOImpl implements VakcinaDAO {
             return vakcinaRowCallBackHandler.getVakcine();
         }
         else if(sort.contains("Naziv-Proizvodjaca")){
-            String query = "SELECT v.id, v.ime, v.kolicina, p.proizvodjacId FROM vakcine v, proizvodjaciVakcina p " +
+            String query = "SELECT v.id, v.ime, v.kolicina, p.proizvodjacId FROM vakcine v, proizvodjaciVakcine p " +
                             "WHERE p.id = v.proizvodjacId " +
                             "ORDER BY p.proizvodjac";
             VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
@@ -144,7 +146,7 @@ public class VakcinaDAOImpl implements VakcinaDAO {
             return vakcinaRowCallBackHandler.getVakcine();
         }
         else if(sort.contains("Drzava-Proizvodjaca")){
-            String query = "SELECT v.id, v.ime, v.kolicina, v.proizvodjacId FROM vakcine v, proizvodjaciVakcina p " +
+            String query = "SELECT v.id, v.ime, v.kolicina, v.proizvodjacId FROM vakcine v, proizvodjaciVakcine p " +
                             "WHERE p.id = v.proizvodjacId " +
                             "ORDER BY p.drzavaProizvodnje";
             VakcinaRowCallBackHandler rowCallBackHandler = new VakcinaRowCallBackHandler();
@@ -162,26 +164,28 @@ public class VakcinaDAOImpl implements VakcinaDAO {
 
     @Override
     public List<Vakcina> findSveVakcine() {
-        String query = "SELECT id, ime, dostupnaKolicina, proizvodjacVakcineId FROM vakcine" +
-                "order by v.id";
+        String query = "SELECT id, ime, dostupnaKolicina, proizvodjacVakcineId FROM vakcine " +
+                        "WHERE jeObrisan = 0 " +
+                        "ORDER BY id";
 
         VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
         jdbcTemplate.query(query, vakcinaRowCallBackHandler);
 
         return vakcinaRowCallBackHandler.getVakcine();
     }
-
+    @Transactional
     @Override
     public Boolean save(Vakcina vakcina) {
         PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                String query = "INSERT INTO vakcine (ime, dostupnaKolicina, proizvodjacVackineId) VALUES (?, ?, ?)";
+                String query = "INSERT INTO vakcine (ime, dostupnaKolicina, proizvodjacVackineId, jeObrisan) VALUES (?, ?, ?, ?)";
                 PreparedStatement preparedStatement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 int index = 1 ;
                 preparedStatement.setString(index++, vakcina.getIme());
                 preparedStatement.setInt(index++, vakcina.getDostupnaKolicina());
                 preparedStatement.setLong(index++, vakcina.getProizvodjac().getId());
+                preparedStatement.setBoolean(index++, vakcina.isJeObrisan());
 
 
                 return preparedStatement;
@@ -192,17 +196,17 @@ public class VakcinaDAOImpl implements VakcinaDAO {
         int uspeh = jdbcTemplate.update(preparedStatementCreator, generatedKeyHolder);
         return uspeh > 0;
     }
-
+    @Transactional
     @Override
     public Boolean update(Vakcina vakcina) {
-        String sql = "UPDATE vakcina SET ime=?, dostupnaKolicina=?, proizvodjacVakcineId=? WHERE id=?";
+        String sql = "UPDATE vakcine SET ime = ?, dostupnaKolicina = ?, proizvodjacVakcineId = ? WHERE id = ?";
         int uspeh = jdbcTemplate.update(sql, vakcina.getIme(), vakcina.getDostupnaKolicina(), vakcina.getProizvodjac().getId());
         return uspeh > 0;
     }
-
+    @Transactional
     @Override
     public Boolean delete(Long id) {
-        String query = "DELETE FROM vakcine WHERE id = ?";
+        String query = "UPDATE vakcine SET jeObrisan = 1 WHERE id = ?";
         int obrisan = jdbcTemplate.update(query, id);
         return obrisan > 0;
     }

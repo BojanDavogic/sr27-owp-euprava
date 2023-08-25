@@ -35,14 +35,15 @@ public class KorisnikDAOImpl implements KorisnikDAO {
             Date datumrodjenja = rs.getDate(index++);
             String jmbg = rs.getString(index++);
             String adresa = rs.getString(index++);
-            int brojTelefona = rs.getInt(index++);
+            String brojTelefona = rs.getString(index++);
             LocalDateTime datumIVremeRegistracije = rs.getTimestamp(index++).toLocalDateTime();
             Uloga uloga = Uloga.valueOf(rs.getString(index++));
+            boolean jeObrisan = Boolean.valueOf(rs.getString(index++));
 
             Korisnik korisnik = korisnici.get(id);
 
             if (korisnik == null){
-                korisnik = new Korisnik(id, email, lozinka, ime, prezime, datumrodjenja, jmbg, adresa, brojTelefona, datumIVremeRegistracije, uloga);
+                korisnik = new Korisnik(id, email, lozinka, ime, prezime, datumrodjenja, jmbg, adresa, brojTelefona, datumIVremeRegistracije, uloga, jeObrisan);
                 korisnici.put(korisnik.getId(), korisnik);
             } else {
                 // Ažuriranje postojećeg korisnika sa dobijenim vrednostima
@@ -56,6 +57,7 @@ public class KorisnikDAOImpl implements KorisnikDAO {
                 korisnik.setBrojTelefona(brojTelefona);
                 korisnik.setDatumIVremeRegistracije(datumIVremeRegistracije);
                 korisnik.setUloga(uloga);
+                korisnik.setJeObrisan(jeObrisan);
             }
         }
 
@@ -66,8 +68,8 @@ public class KorisnikDAOImpl implements KorisnikDAO {
     @Override
     public Korisnik findKorisnik(Long id)
     {
-        String query =  " SELECT * FROM korisnici " +
-                        " WHERE id = ? " +
+        String query =  "SELECT * FROM korisnici " +
+                        "WHERE id = ? AND jeObrisan = 0 " +
                         "ORDER BY id";
         KorisnikRowCallBackHandler korisnikRowCallBackHandler = new KorisnikRowCallBackHandler();
         jdbcTemplate.query(query, korisnikRowCallBackHandler, id);
@@ -78,7 +80,7 @@ public class KorisnikDAOImpl implements KorisnikDAO {
     public Korisnik findKorisnikByEmail(String email) {
 
         String query =  " SELECT * FROM korisnici " +
-                        " WHERE email = ? " +
+                        " WHERE email = ? AND jeObrisan = 0 " +
                         "ORDER BY id";
         KorisnikRowCallBackHandler korisnikRowCallBackHandler = new KorisnikRowCallBackHandler();
         jdbcTemplate.query(query, korisnikRowCallBackHandler, email);
@@ -91,9 +93,9 @@ public class KorisnikDAOImpl implements KorisnikDAO {
     @Override
     public Korisnik findKorisnikByEmailAndPassword(String email, String lozinka) {
 
-        String query =  " SELECT * FROM korisnici " +
-                        " WHERE email = ?" + " AND " + "lozinka = ?" +
-                        " ORDER BY id ";
+        String query =  "SELECT * FROM korisnici " +
+                        "WHERE email = ? " + "AND " + "lozinka = ? AND jeObrisan = 0 " +
+                        "ORDER BY id ";
         KorisnikRowCallBackHandler korisnikRowCallBackHandler = new KorisnikRowCallBackHandler();
         jdbcTemplate.query(query, korisnikRowCallBackHandler, email, lozinka);
         if(korisnikRowCallBackHandler.getKorisnici().size() == 0){
@@ -105,8 +107,9 @@ public class KorisnikDAOImpl implements KorisnikDAO {
     @Override
     public List<Korisnik> findSviKorisnici() {
 
-        String query =  " SELECT * FROM korisnici " +
-                        " ORDER BY id ";
+        String query =  "SELECT * FROM korisnici " +
+                        "WHERE jeObrisan = 0 " +
+                        "ORDER BY id ";
         KorisnikRowCallBackHandler korisnikRowCallBackHandler = new KorisnikRowCallBackHandler();
         jdbcTemplate.query(query, korisnikRowCallBackHandler);
         return korisnikRowCallBackHandler.getKorisnici();
@@ -118,8 +121,8 @@ public class KorisnikDAOImpl implements KorisnikDAO {
         PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                String query =  "INSERT INTO korisnici (email, lozinka, ime, prezime, datumRodjenja, jmbg, adresa, brojTelefona, datumIVremeRegistracije, uloga)" +
-                                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+                String query =  "INSERT INTO korisnici (email, lozinka, ime, prezime, datumRodjenja, jmbg, adresa, brojTelefona, datumIVremeRegistracije, uloga, jeObrisan)" +
+                                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 
                 PreparedStatement preparedStatement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 int index = 1;
@@ -130,9 +133,10 @@ public class KorisnikDAOImpl implements KorisnikDAO {
                 preparedStatement.setDate(index++, (Date) korisnik.getDatumRodjenja());
                 preparedStatement.setString(index++, korisnik.getJmbg());
                 preparedStatement.setString(index++, korisnik.getAdresa());
-                preparedStatement.setInt(index++, korisnik.getBrojTelefona());
+                preparedStatement.setString(index++, korisnik.getBrojTelefona());
                 preparedStatement.setTimestamp(index++, Timestamp.valueOf(korisnik.getDatumIVremeRegistracije()));
                 preparedStatement.setString(index++, korisnik.getUloga().name());
+                preparedStatement.setBoolean(index++, korisnik.isJeObrisan());
 
                 return preparedStatement;
             }
@@ -145,15 +149,15 @@ public class KorisnikDAOImpl implements KorisnikDAO {
     @Override
     public Boolean update(Korisnik korisnik) {
 
-        String query = " UPDATE korisnici SET ime = ?, prezime = ? WHERE id = ?";
-        int uspeh = jdbcTemplate.update(query, korisnik.getIme(), korisnik.getPrezime(), korisnik.getId());
+        String query = " UPDATE korisnici SET email = ?, lozinka = ?, ime = ?, prezime = ?, datumRodjenja = ?, jmbg = ?, adresa = ?, brojTelefona = ? WHERE id = ?";
+        int uspeh = jdbcTemplate.update(query, korisnik.getEmail(), korisnik.getLozinka(), korisnik.getIme(), korisnik.getPrezime(), korisnik.getDatumRodjenja(), korisnik.getJmbg(), korisnik.getAdresa(), korisnik.getBrojTelefona(), korisnik.getId());
         return uspeh > 0;
     }
 
     @Transactional
     @Override
     public Boolean delete(Long id) {
-        String query = " DELETE FROM korisnici WHERE id = ?";
+        String query = " UPDATE korisnici SET jeObrisan = 1 WHERE id = ?";
         int obrisan = jdbcTemplate.update(query, id);
         return obrisan > 0;
     }

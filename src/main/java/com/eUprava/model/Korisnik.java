@@ -14,16 +14,17 @@ public class Korisnik {
     private Date datumRodjenja;
     private String jmbg;
     private String adresa;
-    private int brojTelefona;
+    private String brojTelefona;
     private LocalDateTime datumIVremeRegistracije;
     private Uloga uloga;
+    private boolean jeObrisan;
 
     public Korisnik() {
     }
 
     public Korisnik(Long id, String email, String lozinka, String ime, String prezime,
-                    Date datumRodjenja, String jmbg, String adresa, int brojTelefona,
-                    LocalDateTime datumIVremeRegistracije, Uloga uloga) {
+                    Date datumRodjenja, String jmbg, String adresa, String brojTelefona,
+                    LocalDateTime datumIVremeRegistracije, Uloga uloga, boolean jeObrisan) {
         this.id = id;
         this.email = email;
         this.lozinka = lozinka;
@@ -35,6 +36,7 @@ public class Korisnik {
         this.brojTelefona = brojTelefona;
         this.datumIVremeRegistracije = datumIVremeRegistracije;
         this.uloga = uloga;
+        this.jeObrisan = jeObrisan;
     }
 
     public Long getId() {
@@ -101,11 +103,11 @@ public class Korisnik {
         this.adresa = adresa;
     }
 
-    public int getBrojTelefona() {
+    public String getBrojTelefona() {
         return brojTelefona;
     }
 
-    public void setBrojTelefona(int brojTelefona) {
+    public void setBrojTelefona(String brojTelefona) {
         this.brojTelefona = brojTelefona;
     }
 
@@ -125,20 +127,29 @@ public class Korisnik {
         this.uloga = uloga;
     }
 
+    public boolean isJeObrisan() {
+        return jeObrisan;
+    }
+
+    public void setJeObrisan(boolean jeObrisan) {
+        this.jeObrisan = jeObrisan;
+    }
+
     @Override
     public String toString() {
         return "Korisnik{" +
-                "Id=" + id +
-                ", Email='" + email + '\'' +
-                ", Lozinka='" + lozinka + '\'' +
-                ", Ime='" + ime + '\'' +
-                ", Prezime='" + prezime + '\'' +
-                ", DatumRodjenja=" + datumRodjenja +
-                ", Jmbg='" + jmbg + '\'' +
-                ", Adresa='" + adresa + '\'' +
-                ", BrojTelefona=" + brojTelefona +
-                ", DatumIVremeRegistracije=" + datumIVremeRegistracije +
-                ", Uloga=" + uloga +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", lozinka='" + lozinka + '\'' +
+                ", ime='" + ime + '\'' +
+                ", prezime='" + prezime + '\'' +
+                ", datumRodjenja=" + datumRodjenja +
+                ", jmbg='" + jmbg + '\'' +
+                ", adresa='" + adresa + '\'' +
+                ", brojTelefona=" + brojTelefona +
+                ", datumIVremeRegistracije=" + datumIVremeRegistracije +
+                ", uloga=" + uloga +
+                ", jeObrisan=" + jeObrisan +
                 '}';
     }
 }

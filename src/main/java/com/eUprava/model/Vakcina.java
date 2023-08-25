@@ -5,15 +5,17 @@ public class Vakcina {
     private String ime;
     private int dostupnaKolicina;
     private ProizvodjacVakcine proizvodjac;
+    private boolean jeObrisan;
 
     public Vakcina() {
     }
 
-    public Vakcina(Long id, String ime, int dostupnaKolicina, ProizvodjacVakcine proizvodjac) {
+    public Vakcina(Long id, String ime, int dostupnaKolicina, ProizvodjacVakcine proizvodjac, boolean jeObrisan) {
         this.id = id;
         this.ime = ime;
         this.dostupnaKolicina = dostupnaKolicina;
         this.proizvodjac = proizvodjac;
+        this.jeObrisan = jeObrisan;
     }
 
     public Long getId() {
@@ -48,13 +50,22 @@ public class Vakcina {
         this.proizvodjac = proizvodjac;
     }
 
+    public boolean isJeObrisan() {
+        return jeObrisan;
+    }
+
+    public void setJeObrisan(boolean jeObrisan) {
+        this.jeObrisan = jeObrisan;
+    }
+
     @Override
     public String toString() {
         return "Vakcina{" +
-                "Id=" + id +
-                ", Ime='" + ime + '\'' +
-                ", DostupnaKolicina=" + dostupnaKolicina +
-                ", Proizvodjac=" + proizvodjac +
+                "id=" + id +
+                ", ime='" + ime + '\'' +
+                ", dostupnaKolicina=" + dostupnaKolicina +
+                ", proizvodjac=" + proizvodjac +
+                ", jeObrisan=" + jeObrisan +
                 '}';
     }
 }

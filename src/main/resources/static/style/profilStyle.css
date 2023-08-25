@@ -1,0 +1,58 @@
+/* Profil stilizacija */
+.profil-forma {
+    width: 30%;
+    margin: 0 auto; /* Centriraj formu */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.profil-forma h2 {
+    text-align: center;
+}
+
+.profil-forma form {
+    display: grid;
+    row-gap: 10px;
+}
+
+/* Stilizacija za labele */
+.profil-forma label {
+    font-weight: bold;
+    grid-column: 1; /* Postavi labele u prvu kolonu */
+}
+
+/* Stilizacija za inpute */
+.profil-forma input[type="text"],
+.profil-forma input[type="email"],
+.profil-forma input[type="date"],
+.profil-forma input[type="password"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 100%;
+    grid-column: 2; /* Postavi inpute u drugu kolonu */
+}
+
+/* Centriraj submit dugme */
+.profil-forma input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 0 auto; /* Centriraj dugme */
+    display: block; /* Pređi u novi red */
+    grid-column: span 2;
+}
+
+.profil-forma input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.profil-forma p {
+    color: red;
+}

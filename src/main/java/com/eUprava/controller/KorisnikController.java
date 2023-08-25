@@ -3,12 +3,7 @@ package com.eUprava.controller;
 import com.eUprava.model.Korisnik;
 import com.eUprava.model.Uloga;
 import com.eUprava.service.KorisnikService;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +11,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.security.Principal;
 import java.sql.Date;
 import java.time.LocalDateTime;
 
@@ -46,12 +39,7 @@ public class KorisnikController {
         return "prijava.html";
     }
 
-//    @GetMapping(path = "/pocetna")
-//    public String prikaziPocetnuStranicu() {
-//        return "pocetna.html";
-//    }
-
-
+    public Korisnik prijavljeniKorisnik;
     @PostMapping(value = "/prijava")
     public String postLogin(@RequestParam(required = false) String email, @RequestParam(required = false) String lozinka, HttpSession httpSession, RedirectAttributes redirectAttributes) throws IOException {
         String greska = null;
@@ -65,6 +53,7 @@ public class KorisnikController {
         }
         System.out.println("Korisnik postavljen u sesiju: " + korisnik.getUloga());
         httpSession.setAttribute(KORISNIK_KEY, korisnik);
+        prijavljeniKorisnik = korisnik;
         return "redirect:/korisnici/pocetna";
     }
 
@@ -81,7 +70,7 @@ public class KorisnikController {
     }
 
     @PostMapping(value = "/registracija")
-    public String registerUser(@RequestParam String email, @RequestParam String lozinka, @RequestParam String ime, @RequestParam String prezime, @RequestParam Date datumRodjenja, @RequestParam String jmbg, @RequestParam String adresa, @RequestParam int brojTelefona, HttpSession httpSession, RedirectAttributes redirectAttributes) throws IOException {
+    public String registerUser(@RequestParam String email, @RequestParam String lozinka, @RequestParam String ime, @RequestParam String prezime, @RequestParam Date datumRodjenja, @RequestParam String jmbg, @RequestParam String adresa, @RequestParam String brojTelefona, HttpSession httpSession, RedirectAttributes redirectAttributes) throws IOException {
         Korisnik existingKorisnik = korisnikService.findKorisnikByEmail(email);
         if (existingKorisnik != null) {
             String greska = "Korisnik sa unetim email-om već postoji";
@@ -101,6 +90,7 @@ public class KorisnikController {
         noviKorisnik.setBrojTelefona(brojTelefona);
         noviKorisnik.setDatumIVremeRegistracije(LocalDateTime.now());
         noviKorisnik.setUloga(Uloga.Pacijent);
+        noviKorisnik.setJeObrisan(false);
 
         // Čuvanje novog korisnika u bazi podataka
         korisnikService.save(noviKorisnik);
@@ -113,10 +103,38 @@ public class KorisnikController {
     }
 
     @GetMapping(value = "/profil")
-    public String profilKorisnika(Model model, Principal principal){
-        String email = principal.getName();
-        Korisnik korisnik = korisnikService.findKorisnikByEmail(email);
-        model.addAttribute("korisnik", korisnik);
-        return "user";
+    public String profilKorisnika(Model model, HttpSession httpSession) {
+        Korisnik prijavljeniKorisnik = (Korisnik) httpSession.getAttribute(KORISNIK_KEY);
+
+        if (prijavljeniKorisnik != null) {
+            Korisnik korisnik = korisnikService.findKorisnikByEmailAndPassword(prijavljeniKorisnik.getEmail(), prijavljeniKorisnik.getLozinka());
+            model.addAttribute("korisnik", korisnik);
+        } else {
+            // Korisnik nije prijavljen, preduzmite odgovarajuću akciju (npr. redirekcija na prijavu)
+            return "redirect:/korisnici/prijava";
+        }
+
+        return "profil.html";
+    }
+
+
+    @PostMapping(value = "/izmeni-profil")
+    public String izmenaKorisnika(@RequestParam Long korisnikId, @RequestParam String ime, @RequestParam String prezime, @RequestParam String email, @RequestParam String lozinka, @RequestParam Date datumRodjenja, @RequestParam String jmbg, @RequestParam String adresa, @RequestParam String brojTelefona,  HttpSession httpSession, RedirectAttributes redirectAttributes){
+        Korisnik korisnik = korisnikService.findKorisnik(korisnikId);
+
+        korisnik.setEmail(email);
+        if(!lozinka.isEmpty()){
+            korisnik.setLozinka(lozinka);
+        }
+        korisnik.setIme(ime);
+        korisnik.setPrezime(prezime);
+        korisnik.setDatumRodjenja(datumRodjenja);
+        korisnik.setJmbg(jmbg);
+        korisnik.setAdresa(adresa);
+        korisnik.setBrojTelefona(brojTelefona);
+
+        korisnikService.update(korisnik);
+        httpSession.setAttribute(KORISNIK_KEY, korisnik);
+        return "redirect:/korisnici/profil";
     }
 }

@@ -32,6 +32,7 @@ public class DBVestOObolelimaServiceImpl implements VestOObolelimaService {
 
     @Override
     public VestOObolelima update(VestOObolelima vestOObolelima) {
+        vestOObolelimaDAO.update(vestOObolelima);
         return vestOObolelima;
     }
 

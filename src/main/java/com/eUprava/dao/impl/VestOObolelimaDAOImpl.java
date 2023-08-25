@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -35,10 +36,11 @@ public class VestOObolelimaDAOImpl implements VestOObolelimaDAO {
             int hospitalizovani = rs.getInt(index++);;
             int pacijentiNaRespiratoru = rs.getInt(index++);;
             LocalDateTime datumIVremeObjavljivanja = rs.getTimestamp(index++).toLocalDateTime();
+            boolean jeObrisan = Boolean.valueOf(rs.getString(index++));
 
             VestOObolelima vestOObolelima = vestiOObolelima.get(id);
             if(vestOObolelima == null) {
-                vestOObolelima = new VestOObolelima(id, oboleliUDanu, testiraniUDanu, ukupnoOboleli, hospitalizovani, pacijentiNaRespiratoru, datumIVremeObjavljivanja);
+                vestOObolelima = new VestOObolelima(id, oboleliUDanu, testiraniUDanu, ukupnoOboleli, hospitalizovani, pacijentiNaRespiratoru, datumIVremeObjavljivanja, jeObrisan);
                 vestiOObolelima.put(vestOObolelima.getId(), vestOObolelima);
             }
         }
@@ -49,8 +51,8 @@ public class VestOObolelimaDAOImpl implements VestOObolelimaDAO {
 
     @Override
     public VestOObolelima findVestOObolelima(Long id) {
-        String query = "SELECT id, oboleliUDanu, testiraniUDanu, getUkupnoOboleli(id), hospitalizovani, pacijentiNaRespiratoru, datumIVremeObjavljivanja FROM vestiOObolelima" +
-                " WHERE id=?" +
+        String query = "SELECT id, oboleliUDanu, testiraniUDanu, getUkupnoOboleli(id), hospitalizovani, pacijentiNaRespiratoru, datumIVremeObjavljivanja, jeObrisan FROM vestiOObolelima" +
+                " WHERE id = ? AND jeObrisan = 0 " +
                 " ORDER BY id";
 
         VestOObolelimaDAOImpl.VestOObolelimaRowCallBackHandler vestOObolelimaRowCallBackHandler = new VestOObolelimaDAOImpl.VestOObolelimaRowCallBackHandler();
@@ -61,21 +63,22 @@ public class VestOObolelimaDAOImpl implements VestOObolelimaDAO {
 
     @Override
     public List<VestOObolelima> findSveVestiOObolelima() {
-        String query = "SELECT id, oboleliUDanu, testiraniUDanu, getUkupnoOboleli(id), hospitalizovani, pacijentiNaRespiratoru, datumIVremeObjavljivanja FROM vestiOObolelima" +
-                        " ORDER BY id";
+        String query = "SELECT id, oboleliUDanu, testiraniUDanu, getUkupnoOboleli(id), hospitalizovani, pacijentiNaRespiratoru, datumIVremeObjavljivanja, jeObrisan FROM vestiOObolelima " +
+                        "WHERE jeObrisan = 0 " +
+                        "ORDER BY id";
 
         VestOObolelimaDAOImpl.VestOObolelimaRowCallBackHandler vestOObolelimaRowCallBackHandler = new VestOObolelimaDAOImpl.VestOObolelimaRowCallBackHandler();
         jdbcTemplate.query(query, vestOObolelimaRowCallBackHandler);
 
         return vestOObolelimaRowCallBackHandler.getVestiOObolelima();
     }
-
+    @Transactional
     @Override
     public Boolean save(VestOObolelima vestObolelima) {
         PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                String query = "INSERT INTO vestiOObolelima (oboleliUDanu, testiraniUDanu, hospitalizovani, pacijentiNaRespiratoru, datumIVremeObjavljivanja) VALUES (?, ?, ?, ?, ?)";
+                String query = "INSERT INTO vestiOObolelima (oboleliUDanu, testiraniUDanu, hospitalizovani, pacijentiNaRespiratoru, datumIVremeObjavljivanja, jeObrisan) VALUES (?, ?, ?, ?, ?, ?)";
                 PreparedStatement preparedStatement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 int index = 1 ;
                 preparedStatement.setInt(index++, vestObolelima.getOboleliUDanu());
@@ -83,6 +86,7 @@ public class VestOObolelimaDAOImpl implements VestOObolelimaDAO {
                 preparedStatement.setInt(index++, vestObolelima.getHospitalizovani());
                 preparedStatement.setInt(index++, vestObolelima.getPacijentiNaRespiratoru());
                 preparedStatement.setTimestamp(index++, Timestamp.valueOf(vestObolelima.getDatumIVremeObjavljivanja()));
+                preparedStatement.setBoolean(index++, vestObolelima.isJeObrisan());
 
 
                 return preparedStatement;
@@ -93,17 +97,17 @@ public class VestOObolelimaDAOImpl implements VestOObolelimaDAO {
         int uspeh = jdbcTemplate.update(preparedStatementCreator, generatedKeyHolder);
         return uspeh > 0;
     }
-
+    @Transactional
     @Override
     public Boolean update(VestOObolelima vestOObolelima) {
         String query = " UPDATE vestiOObolelima SET oboleliUDanu = ?, testiraniUDanu = ?, hospitalizovani = ?, pacijentiNaRespiratoru = ?, datumIVremeObjavljivanja = ? WHERE id = ?";
-        int uspeh = jdbcTemplate.update(query, vestOObolelima.getOboleliUDanu(), vestOObolelima.getTestiraniUDanu(), vestOObolelima.getHospitalizovani(), vestOObolelima.getPacijentiNaRespiratoru(), vestOObolelima.getId());
+        int uspeh = jdbcTemplate.update(query, vestOObolelima.getOboleliUDanu(), vestOObolelima.getTestiraniUDanu(), vestOObolelima.getHospitalizovani(), vestOObolelima.getPacijentiNaRespiratoru(), vestOObolelima.getDatumIVremeObjavljivanja(), vestOObolelima.getId());
         return uspeh > 0;
     }
-
+    @Transactional
     @Override
     public Boolean delete(Long id) {
-        String query = "DELETE FROM vestiOObolelima WHERE id = ?";
+        String query = "UPDATE vestiOObolelima SET jeObrisan = 1 WHERE id = ?";
         int obrisan = jdbcTemplate.update(query, id);
         return obrisan > 0;
     }

@@ -10,18 +10,17 @@
 </head>
 <body>
 <div class="header">
-    <h1>Početna stranica eUprave</h1>
+    <h1>eUprava</h1>
     <a class="odjava-btn" href="korisnici/odjava">Odjavi se</a>
 </div>
 <nav class="nav-bar">
     <ul>
         <li><a th:href="@{korisnici/pocetna}">Početna</a></li>
         <li><a th:href="@{/vakcine}">Vakcine</a></li>
-        <li><a th:href="@{/profil}">Profil</a></li>
-        <!-- Dodajte ostale linkove prema potrebi -->
+        <li><a th:href="@{korisnici/profil}">Profil</a></li>
     </ul>
 </nav>
-<p style="position: absolute; top: 0; right: 0; margin: 5px;" id="korisnik"><span th:text="${#httpSession.getAttribute('korisnik').uloga}"></span></p>
+<p style="position: absolute; top: 0; right: 0; margin: 5px;" id="korisnik"><span th:text="${#httpSession.getAttribute('korisnik').email}"></span></p>
 <div th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).Administrator}" class="unos-vesti">
     <h2>Unos nove vesti</h2>
     <form method="post" action="dodavanjeVesti">
@@ -55,14 +54,18 @@
     <h2>Vesti</h2>
     <div class="objave">
         <!-- Statistika za trenutni datum kao istaknuta objava -->
-        <div id="statistika" th:if="${istaknutaVest}" th:classappend="${'objava istaknuta'}" class="objava">
+        <div id="statistika" th:if="${istaknutaVest}" th:classappend="${'objava istaknuta'}" th:data-id="${istaknutaVest.id}" class="objava">
             <h3>Statistički izveštaj za datum: <span th:text="${#temporals.format(istaknutaVest.datumIVremeObjavljivanja, 'dd.MM.yyyy.')}"></span></h3>
             <hr style="font-weight: bold">
-            <p>Broj zaraženih: <span th:text="${istaknutaVest.oboleliUDanu}"></span></p>
-            <p>Broj testiranih: <span th:text="${istaknutaVest.testiraniUDanu}"></span></p>
-            <p>Broj hospitalizovanih: <span th:text="${istaknutaVest.hospitalizovani}"></span></p>
-            <p>Broj pacijenata na respiratoru: <span th:text="${istaknutaVest.pacijentiNaRespiratoru}"></span></p>
+            <p>Broj zaraženih: <span class="broj-obolelih" th:text="${istaknutaVest.oboleliUDanu}"></span></p>
+            <p>Broj testiranih: <span class="broj-testiranih" th:text="${istaknutaVest.testiraniUDanu}"></span></p>
+            <p>Broj hospitalizovanih: <span class="broj-hospitalizovanih" th:text="${istaknutaVest.hospitalizovani}"></span></p>
+            <p>Broj pacijenata na respiratoru: <span class="broj-pacijenti-na-respiratoru" th:text="${istaknutaVest.pacijentiNaRespiratoru}"></span></p>
             <p style="font-weight: bold">Ukupan broj zaraženih: <span th:text="${istaknutaVest.ukupnoOboleli}"></span></p>
+            <div th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).Administrator}" class="dugmad">
+                <button class="izmena-dugme-statistika" onclick="openModalStatistika('${istaknutaVest.oboleliUDanu}', '${istaknutaVest.testiraniUDanu}', '${istaknutaVest.hospitalizovani}', '${istaknutaVest.pacijentiNaRespiratoru}', '${istaknutaVest.id}')">Izmeni</button>
+                <button class="brisanje-dugme-statistika">Obriši</button>
+            </div>
         </div>
 
 <!--        <div th:fragment="vesti">-->
@@ -72,7 +75,7 @@
             <p class="datum" th:text="${#temporals.format(vest.datumIVremeObjavljivanja, 'dd.MM.yyyy. HH:mm')}"></p>
             <div th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).Administrator}" class="dugmad">
                 <button class="izmena-dugme" onclick="openModal('${vest.naziv}', '${vest.sadrzaj}', '${vest.id}')">Izmeni</button>
-                <button class="brisanje-dugme">Obriši</button>
+                <button class="brisanje-dugme" th:data-id="${vest.id}" onclick="obrisiVest(this)">Obriši</button>
             </div>
         </div>
 
@@ -92,6 +95,26 @@
         </form>
     </div>
 </div>
+
+<div id="modalStatistika" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModalStatistika()">&times;</span>
+        <form id="izmenaStatistikaForma" action="" method="post">
+            <input type="hidden" id="statistikaId" name="statistikaId">
+            <label for="oboleliIzmena">Broj obolelih:</label>
+            <input type="number" id="oboleliIzmena" name="oboleliIzmena" required><br>
+            <label for="testiraniIzmena">Broj testiranih:</label>
+            <input type="number" id="testiraniIzmena" name="testiraniIzmena" required><br>
+            <label for="hospitalizovaniIzmena">Broj hospitalizovanih:</label>
+            <input type="number" id="hospitalizovaniIzmena" name="hospitalizovaniIzmena" required><br>
+            <label for="pacijentiNaRespiratoruIzmena">Broj pacijenata na respiratoru:</label>
+            <input type="number" id="pacijentiNaRespiratoruIzmena" name="pacijentiNaRespiratoruIzmena" required><br>
+            <button type="submit">Potvrdi izmenu</button>
+        </form>
+    </div>
+</div>
+
+
 </body>
 </html>
 

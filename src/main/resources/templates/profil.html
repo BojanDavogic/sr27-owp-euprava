@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil korisnika</title>
+    <link rel="stylesheet" th:href="@{/style/pocetnaStyle.css}">
+    <link rel="stylesheet" th:href="@{/style/profilStyle.css}">
+    <script th:src="@{/js/profil.js}"></script>
+    <base href="/eUprava/">
+</head>
+<body>
+<div class="header">
+    <h1>eUprava</h1>
+    <a class="odjava-btn" href="korisnici/odjava">Odjavi se</a>
+</div>
+<nav class="nav-bar">
+    <ul>
+        <li><a th:href="@{korisnici/pocetna}">Početna</a></li>
+        <li><a th:href="@{/vakcine}">Vakcine</a></li>
+        <li><a th:href="@{korisnici/profil}">Profil</a></li>
+    </ul>
+</nav>
+<p style="position: absolute; top: 0; right: 0; margin: 5px;" id="korisnik"><span th:text="${korisnik.email}"></span></p>
+<div class="profil-forma">
+    <h2>Profil korisnika</h2>
+    <form action="korisnici/izmeni-profil" method="post">
+        <input type="hidden" id="korisnikId" name="korisnikId" th:value="${korisnik.id}">
+        <label for="ime">Ime:</label>
+        <input type="text" id="ime" name="ime" th:value="${korisnik.ime}" required><br><br>
+
+        <label for="prezime">Prezime:</label>
+        <input type="text" id="prezime" name="prezime" th:value="${korisnik.prezime}" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" th:value="${korisnik.email}" required><br><br>
+
+        <label for="datumRodjenja">Datum rođenja:</label>
+        <input type="date" id="datumRodjenja" name="datumRodjenja" th:value="${korisnik.datumRodjenja}" required><br><br>
+
+        <label for="jmbg">JMBG:</label>
+        <input type="text" id="jmbg" name="jmbg" th:value="${korisnik.jmbg}" required><br><br>
+
+        <label for="adresa">Adresa:</label>
+        <input type="text" id="adresa" name="adresa" th:value="${korisnik.adresa}" required><br><br>
+
+        <label for="brojTelefona">Broj telefona:</label>
+        <input type="text" id="brojTelefona" name="brojTelefona" th:value="${korisnik.brojTelefona}" required><br><br>
+
+        <label for="lozinka">Nova lozinka:</label>
+        <input type="password" id="lozinka" name="lozinka"><br><br>
+
+        <label for="potvrdaLozinke">Potvrdite novu lozinku:</label>
+        <input type="password" id="potvrdaLozinke" name="potvrdaLozinke"><br><br>
+        <p id="greskaProfil"></p>
+        <input type="submit" value="Sačuvaj izmene">
+    </form>
+</div>
+
+</body>
+</html>

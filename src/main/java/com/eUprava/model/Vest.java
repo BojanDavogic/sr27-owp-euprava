@@ -7,15 +7,16 @@ public class Vest {
     private String naziv;
     private String sadrzaj;
     private LocalDateTime datumIVremeObjavljivanja;
-
+    private boolean jeObrisan;
     public Vest() {
     }
 
-    public Vest(Long id, String naziv, String sadrzaj, LocalDateTime datumIVremeObjavljivanja) {
+    public Vest(Long id, String naziv, String sadrzaj, LocalDateTime datumIVremeObjavljivanja, boolean jeObrisan) {
         this.id = id;
         this.naziv = naziv;
         this.sadrzaj = sadrzaj;
         this.datumIVremeObjavljivanja = datumIVremeObjavljivanja;
+        this.jeObrisan = jeObrisan;
     }
 
     public Long getId() {
@@ -50,13 +51,22 @@ public class Vest {
         this.datumIVremeObjavljivanja = datumIVremeObjavljivanja;
     }
 
+    public boolean isJeObrisan() {
+        return jeObrisan;
+    }
+
+    public void setJeObrisan(boolean jeObrisan) {
+        this.jeObrisan = jeObrisan;
+    }
+
     @Override
     public String toString() {
         return "Vest{" +
-                "Id=" + id +
-                ", NazivVesti='" + naziv + '\'' +
-                ", Sadrzaj='" + sadrzaj + '\'' +
-                ", DatumIVremeObjavljivanja=" + datumIVremeObjavljivanja +
+                "id=" + id +
+                ", naziv='" + naziv + '\'' +
+                ", sadrzaj='" + sadrzaj + '\'' +
+                ", datumIVremeObjavljivanja=" + datumIVremeObjavljivanja +
+                ", jeObrisan=" + jeObrisan +
                 '}';
     }
 }

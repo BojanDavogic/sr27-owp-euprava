@@ -11,12 +11,13 @@ public class VestOObolelima {
     private int hospitalizovani;
     private int pacijentiNaRespiratoru;
     private LocalDateTime datumIVremeObjavljivanja;
+    private boolean jeObrisan;
 
     public VestOObolelima() {
     }
 
     public VestOObolelima(Long id, int oboleliUDanu, int testiraniUDanu, int ukupnoOboleli,
-                          int hospitalizovani, int pacijentiNaRespiratoru, LocalDateTime datumIVremeObjavljivanja) {
+                          int hospitalizovani, int pacijentiNaRespiratoru, LocalDateTime datumIVremeObjavljivanja, boolean jeObrisan) {
         this.id = id;
         this.oboleliUDanu = oboleliUDanu;
         this.testiraniUDanu = testiraniUDanu;
@@ -24,6 +25,7 @@ public class VestOObolelima {
         this.hospitalizovani = hospitalizovani;
         this.pacijentiNaRespiratoru = pacijentiNaRespiratoru;
         this.datumIVremeObjavljivanja = datumIVremeObjavljivanja;
+        this.jeObrisan = jeObrisan;
     }
 
     public Long getId() {
@@ -82,17 +84,25 @@ public class VestOObolelima {
         this.datumIVremeObjavljivanja = datumIVremeObjavljivanja;
     }
 
+    public boolean isJeObrisan() {
+        return jeObrisan;
+    }
+
+    public void setJeObrisan(boolean jeObrisan) {
+        this.jeObrisan = jeObrisan;
+    }
 
     @Override
     public String toString() {
         return "VestOObolelima{" +
-                "Id=" + id +
-                ", OboleliUDanu=" + oboleliUDanu +
-                ", TestiraniUDanu=" + testiraniUDanu +
-                ", UkupnoOboleli=" + ukupnoOboleli +
-                ", Hospitalizovani=" + hospitalizovani +
-                ", PacijentiNaRespiratoru=" + pacijentiNaRespiratoru +
-                ", DatumIVremeObjavljivanja=" + datumIVremeObjavljivanja +
+                "id=" + id +
+                ", oboleliUDanu=" + oboleliUDanu +
+                ", testiraniUDanu=" + testiraniUDanu +
+                ", ukupnoOboleli=" + ukupnoOboleli +
+                ", hospitalizovani=" + hospitalizovani +
+                ", pacijentiNaRespiratoru=" + pacijentiNaRespiratoru +
+                ", datumIVremeObjavljivanja=" + datumIVremeObjavljivanja +
+                ", jeObrisan=" + jeObrisan +
                 '}';
     }
 }
