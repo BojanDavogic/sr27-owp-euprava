@@ -62,3 +62,75 @@ td a:hover {
 .search-container button:hover {
     background-color: #0056b3;
 }
+
+/* Stil za formu dodavanja nove vakcine */
+.dodavanje-vakcine {
+    width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dodavanje-vakcine h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+}
+
+.dodavanje-vakcine label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.dodavanje-vakcine input[type="text"]{
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.dodavanje-vakcine select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.dodavanje-vakcine button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.dodavanje-vakcine button:hover {
+    background-color: #0056b3;
+}
+
+.dodavanje-vakcine p {
+    color: #007bff;
+    cursor: pointer;
+}
+
+.dodavanje-vakcine p:hover {
+    color: #0056b3;
+}
+
+#noviProizvodjacForma {
+    margin-top: 20px;
+}
+
+#noviProizvodjacForma input {
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}

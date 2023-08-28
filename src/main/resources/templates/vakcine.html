@@ -71,6 +71,32 @@
         <button type="submit">Pretraži</button>
     </form>
 </div>
+<div class="dodavanje-vakcine">
+    <h2>Dodavanje nove vakcine</h2>
+    <form id="formaDodajVakcinu" th:action="@{/vakcine/dodaj}" method="post">
+        <label for="imeVakcine">Ime vakcine:</label>
+        <input type="text" id="imeVakcine" name="imeVakcine" required>
+
+        <label for="proizvodjacVakcine">Proizvođač vakcine:</label>
+        <select id="proizvodjacVakcine" name="proizvodjacVakcine" required>
+            <option selected disabled value="null"></option>
+            <option th:each="proizvodjac : ${proizvodjaci}" th:value="${proizvodjac.id}" th:text="${proizvodjac.proizvodjac}"></option>
+        </select>
+        <p id="noviProizvodjacLink">Dodaj novog proizvođača (+)</p>
+        <button id="btnDodajVakcinu" type="submit">Dodaj vakcinu</button>
+    </form>
+    <div id="noviProizvodjacForma" style="display: none;">
+        <h2>Dodavanje novog proizvođača vakcine</h2>
+        <form th:action="@{/proizvodjaci/dodaj}" method="post">
+            <label for="nazivProizvodjaca">Naziv proizvođača:</label>
+            <input type="text" id="nazivProizvodjaca" name="nazivProizvodjaca" required>
+            <label for="drzavaProizvodjaca">Država proizvođača:</label>
+            <input type="text" id="drzavaProizvodjaca" name="drzavaProizvodjaca" required>
+            <button id="btnDodajProizvodjaca" type="submit">Dodaj proizvođača</button>
+        </form>
+    </div>
+</div>
+
 
 </body>
 </html>

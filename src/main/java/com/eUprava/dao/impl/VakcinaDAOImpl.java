@@ -190,7 +190,7 @@ public class VakcinaDAOImpl implements VakcinaDAO {
         PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                String query = "INSERT INTO vakcine (ime, dostupnaKolicina, proizvodjacVackineId, jeObrisan) VALUES (?, ?, ?, ?)";
+                String query = "INSERT INTO vakcine (ime, dostupnaKolicina, proizvodjacVakcineId, jeObrisan) VALUES (?, ?, ?, ?)";
                 PreparedStatement preparedStatement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 int index = 1 ;
                 preparedStatement.setString(index++, vakcina.getIme());
@@ -211,7 +211,7 @@ public class VakcinaDAOImpl implements VakcinaDAO {
     @Override
     public Boolean update(Vakcina vakcina) {
         String sql = "UPDATE vakcine SET ime = ?, dostupnaKolicina = ?, proizvodjacVakcineId = ? WHERE id = ?";
-        int uspeh = jdbcTemplate.update(sql, vakcina.getIme(), vakcina.getDostupnaKolicina(), vakcina.getProizvodjac().getId());
+        int uspeh = jdbcTemplate.update(sql, vakcina.getIme(), vakcina.getDostupnaKolicina(), vakcina.getProizvodjac().getId(), vakcina.getId());
         return uspeh > 0;
     }
     @Transactional

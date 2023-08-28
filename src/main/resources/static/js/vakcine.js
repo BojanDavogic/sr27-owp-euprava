@@ -21,4 +21,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Dodajte event listener koji će reagovati na promene u dropdown listi "kriterijum"
     kriterijumSelect.addEventListener("change", toggleKolicinaInputs);
+
+
+    var noviProizvodjacLink = document.getElementById("noviProizvodjacLink");
+    var noviProizvodjacForma = document.getElementById("noviProizvodjacForma");
+    var proizvodjacSelect = document.getElementById("proizvodjacVakcine");
+    var btnDodajVakcinu = document.getElementById("btnDodajVakcinu");
+
+    noviProizvodjacLink.addEventListener("click", function() {
+        noviProizvodjacForma.style.display = "block";
+        proizvodjacSelect.disabled = true;
+        btnDodajVakcinu.disabled = true;
+        btnDodajVakcinu.style.background = "grey";
+    });
 });

@@ -69,7 +69,7 @@ public class ProizvodjacVakcineDAOImpl implements ProizvodjacVakcineDAO {
         PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                String query = "INSERT INTO proizvodjacivakcine (proizvodjac, drzavaProizvodnje, jeObrisan)" +
+                String query = "INSERT INTO proizvodjacivakcine (proizvodjac, drzavaProizvodnje, jeObrisan) " +
                                 "VALUES (?, ?, ?)";
 
                 PreparedStatement preparedStatement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);

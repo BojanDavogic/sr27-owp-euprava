@@ -24,8 +24,23 @@
   <h2>Detalji vakcine: <span th:text="${vakcina.ime}"></span></h2>
   <p>Dostupna količina: <span th:text="${vakcina.dostupnaKolicina}"></span></p>
   <p>Naziv proizvođača: <span th:text="${vakcina.proizvodjac.proizvodjac}"></span></p>
-  <!-- Dodajte ostale informacije o vakcini ovde -->
+  <p>Drzava proizvođača: <span th:text="${vakcina.proizvodjac.drzavaProizvodnje}"></span></p>
 </div>
+
+<form th:action="@{/vakcine/izmeni/{vakcinaId}(vakcinaId=${vakcina.id})}" method="post">
+  <h2>Izmena podataka o vakcini</h2>
+  <input type="hidden" name="id" th:value="${vakcina.id}">
+  <input type="hidden" id="proizvodjacVakcineId" name="proizvodjacVakcineId" th:value="${vakcina.proizvodjac.id}">
+  <label for="imeVakcine">Ime vakcine:</label>
+  <input type="text" id="imeVakcine" name="imeVakcine" th:value="${vakcina.ime}" required>
+
+  <label for="nazivProizvodjaca">Naziv proizvođača:</label>
+  <input type="text" id="nazivProizvodjaca" name="nazivProizvodjaca" th:value="${vakcina.proizvodjac.proizvodjac}" required>
+  <label for="drzavaProizvodjaca">Država proizvođača:</label>
+  <input type="text" id="drzavaProizvodjaca" name="drzavaProizvodjaca" th:value="${vakcina.proizvodjac.drzavaProizvodnje}" required>
+
+  <button type="submit">Sačuvaj izmene</button>
+</form>
 
 </body>
 </html>

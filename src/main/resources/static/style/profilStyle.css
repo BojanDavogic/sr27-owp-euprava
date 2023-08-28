@@ -1,7 +1,7 @@
 /* Profil stilizacija */
 .profil-forma {
     width: 30%;
-    margin: 0 auto; /* Centriraj formu */
+    margin: 20px auto; /* Centriraj formu */
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
