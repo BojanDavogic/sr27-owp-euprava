@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalji vakcine</title>
+  <link rel="stylesheet" th:href="@{/style/pocetnaStyle.css}">
+  <link rel="stylesheet" th:href="@{/style/detaljiVakcineStyle.css}">
+  <base href="/eUprava/">
+</head>
+<body>
+<div class="header">
+  <h1>eUprava</h1>
+  <a class="odjava-btn" href="korisnici/odjava">Odjavi se</a>
+</div>
+<nav class="nav-bar">
+  <ul>
+    <li><a th:href="@{korisnici/pocetna}">Početna</a></li>
+    <li><a th:href="@{vakcine}">Vakcine</a></li>
+    <li><a th:href="@{korisnici/profil}">Profil</a></li>
+  </ul>
+</nav>
+
+<div class="vakcina-details">
+  <h2>Detalji vakcine: <span th:text="${vakcina.ime}"></span></h2>
+  <p>Dostupna količina: <span th:text="${vakcina.dostupnaKolicina}"></span></p>
+  <p>Naziv proizvođača: <span th:text="${vakcina.proizvodjac.proizvodjac}"></span></p>
+  <!-- Dodajte ostale informacije o vakcini ovde -->
+</div>
+
+</body>
+</html>

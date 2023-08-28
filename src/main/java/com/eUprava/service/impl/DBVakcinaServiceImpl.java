@@ -1,8 +1,6 @@
 package com.eUprava.service.impl;
 
-import com.eUprava.dao.ProizvodjacVakcineDAO;
 import com.eUprava.dao.VakcinaDAO;
-import com.eUprava.model.ProizvodjacVakcine;
 import com.eUprava.model.Vakcina;
 import com.eUprava.service.VakcinaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,23 +18,28 @@ public class DBVakcinaServiceImpl implements VakcinaService {
     }
 
     @Override
-    public Vakcina findVakcinaByNaziv(String nazivProizvodjaca) {
-        return vakcinaDAO.findVakcinaByNaziv(nazivProizvodjaca);
+    public List<Vakcina> findVakcinaByNaziv(String naziv) {
+        return vakcinaDAO.findVakcinaByNaziv(naziv);
     }
 
     @Override
-    public Vakcina findVakcinaByDrzava(String drzavaProizvodnje) {
+    public List<Vakcina> findVakcinaByNazivProizvodjaca(String nazivProizvodjaca) {
+        return vakcinaDAO.findVakcinaByNazivProizvodjaca(nazivProizvodjaca);
+    }
+
+    @Override
+    public List<Vakcina> findVakcinaByDrzava(String drzavaProizvodnje) {
         return vakcinaDAO.findVakcinaByDrzava(drzavaProizvodnje);
     }
 
     @Override
-    public Vakcina findVakcinaByKolicina(int minKolicina, int maxKolicina) {
+    public List<Vakcina> findVakcinaByKolicina(int minKolicina, int maxKolicina) {
         return vakcinaDAO.findVakcinaByKolicina(minKolicina, maxKolicina);
     }
 
     @Override
-    public List<Vakcina> sortVakcine(String sort) {
-        return null;
+    public List<Vakcina> sortVakcine(List<Vakcina> vakcine, String sort) {
+        return vakcinaDAO.sortVakcine(vakcine, sort);
     }
 
     @Override

@@ -51,7 +51,7 @@ public class VakcinaDAOImpl implements VakcinaDAO {
 
     @Override
     public Vakcina findVakcina(Long id) {
-        String query = "SELECT v.id, v.ime, v.dostupnaKolicina, p.proizvodjacVakcineId FROM vakcine v, proizvodjaciVakcine p " +
+        String query = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId, v.jeObrisan FROM vakcine v, proizvodjaciVakcine p " +
                 "WHERE v.id = ? AND v.jeObrisan = 0 " +
                 "ORDER BY v.id";
 
@@ -62,34 +62,54 @@ public class VakcinaDAOImpl implements VakcinaDAO {
     }
 
     @Override
-    public Vakcina findVakcinaByNaziv(String nazivProizvodjaca) {
-        String sql = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId FROM vakcine v, proizvodjaciVakcine p " +
+    public List<Vakcina> findVakcinaByNaziv(String naziv) {
+        System.out.println("Pozvan je findVakcinaByNaziv");
+        System.out.println("Naziv vakcine " + naziv);
+        String query = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId, v.jeObrisan FROM vakcine v, proizvodjaciVakcine p " +
+                "WHERE v.ime = ? AND v.jeObrisan = 0 " +
+                "ORDER BY v.id";
+
+        VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
+        jdbcTemplate.query(query, vakcinaRowCallBackHandler, naziv);
+
+        return vakcinaRowCallBackHandler.getVakcine();
+    }
+
+    @Override
+    public List<Vakcina> findVakcinaByNazivProizvodjaca(String nazivProizvodjaca) {
+        System.out.println("Pozvan je findVakcinaByNazivProizvodjaca");
+        System.out.println("Naziv proizvodjaca " + nazivProizvodjaca);
+        String query = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId, v.jeObrisan, p.proizvodjac FROM vakcine v, proizvodjaciVakcine p " +
                 "WHERE v.proizvodjacVakcineId = p.id  AND p.proizvodjac = ? AND v.jeObrisan = 0 " +
                 "ORDER BY v.id";
 
         VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
-        jdbcTemplate.query(sql, vakcinaRowCallBackHandler, nazivProizvodjaca);
+        jdbcTemplate.query(query, vakcinaRowCallBackHandler, nazivProizvodjaca);
 
-        return vakcinaRowCallBackHandler.getVakcine().get(0);
+        return vakcinaRowCallBackHandler.getVakcine();
     }
 
     @Override
-    public Vakcina findVakcinaByDrzava(String drzavaProizvodnje) {
-        String sql = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId FROM vakcine v, proizvodjaciVakcine p " +
+    public List<Vakcina> findVakcinaByDrzava(String drzavaProizvodnje) {
+        System.out.println("Pozvan je findVakcinaByDrzava");
+        System.out.println("Drzava proizvodnje " + drzavaProizvodnje);
+        String query = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId, v.jeObrisan, p.drzavaProizvodnje FROM vakcine v, proizvodjaciVakcine p " +
                 "WHERE v.proizvodjacVakcineId = p.id  AND p.drzavaProizvodnje = ? AND v.jeObrisan = 0 " +
                 "ORDER BY v.id";
 
         VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
-        jdbcTemplate.query(sql, vakcinaRowCallBackHandler, drzavaProizvodnje);
+        jdbcTemplate.query(query, vakcinaRowCallBackHandler, drzavaProizvodnje);
 
-        return vakcinaRowCallBackHandler.getVakcine().get(0);
+        return vakcinaRowCallBackHandler.getVakcine();
     }
 
     @Override
-    public Vakcina findVakcinaByKolicina(int minKolicina, int maxKolicina) {
+    public List<Vakcina> findVakcinaByKolicina(int minKolicina, int maxKolicina) {
+        System.out.println("Pozvan je findVakcinaByKolicina");
+        System.out.println("Min Kolicina " + minKolicina + " Max kolicina " + maxKolicina);
         ArrayList<Object> listaArgumenata = new ArrayList<>();
 
-        String query = "SELECT id, ime, dostupnaKolicina, proizvodjacVakcineId FROM vakcine";
+        String query = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId, v.jeObrisan FROM vakcine v";
         StringBuffer whereQuery = new StringBuffer(" WHERE ");
         boolean argumenti = false;
 
@@ -116,56 +136,47 @@ public class VakcinaDAOImpl implements VakcinaDAO {
         System.out.println(query);
 
         VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
-        jdbcTemplate.query(query, vakcinaRowCallBackHandler);
-        return vakcinaRowCallBackHandler.getVakcine().get(0);
+        jdbcTemplate.query(query, listaArgumenata.toArray(), vakcinaRowCallBackHandler);
+        return vakcinaRowCallBackHandler.getVakcine();
     }
+
 
     @Override
-    public List<Vakcina> sortVakcine(String sort) {
+    public List<Vakcina> sortVakcine(List<Vakcina> vakcine, String sort) {
+        System.out.println("Pozvan je sortVakcine");
+        System.out.println(sort + " Sortiranje");
 
-        if(sort.contains("Rastuci|Kolicina")) {
-            String query = "SELECT id, ime, kolicina, proizvodjacId FROM vakcine " +
-                            "ORDER BY kolicina ASC";
-            VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
-            jdbcTemplate.query(query, vakcinaRowCallBackHandler);
-            return vakcinaRowCallBackHandler.getVakcine();
-        }
-        else if(sort.contains("Opadajuci|Kolicina")){
-            String query = "SELECT id, ime, kolicina, proizvodjacId FROM vakcine " +
-                            "ORDER BY kolicina DESC";
-            VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
-            jdbcTemplate.query(query, vakcinaRowCallBackHandler);
-            return vakcinaRowCallBackHandler.getVakcine();
-        }
-        else if(sort.contains("Naziv-Proizvodjaca")){
-            String query = "SELECT v.id, v.ime, v.kolicina, p.proizvodjacId FROM vakcine v, proizvodjaciVakcine p " +
-                            "WHERE p.id = v.proizvodjacId " +
-                            "ORDER BY p.proizvodjac";
-            VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
-            jdbcTemplate.query(query, vakcinaRowCallBackHandler);
-            return vakcinaRowCallBackHandler.getVakcine();
-        }
-        else if(sort.contains("Drzava-Proizvodjaca")){
-            String query = "SELECT v.id, v.ime, v.kolicina, v.proizvodjacId FROM vakcine v, proizvodjaciVakcine p " +
-                            "WHERE p.id = v.proizvodjacId " +
-                            "ORDER BY p.drzavaProizvodnje";
-            VakcinaRowCallBackHandler rowCallBackHandler = new VakcinaRowCallBackHandler();
-            jdbcTemplate.query(query, rowCallBackHandler);
-            return rowCallBackHandler.getVakcine();
-        }
-        else {
-            String query = "SELECT id, ime, kolicina, proizvodjacId from vakcine " +
-                            "ORDER BY id";
-            VakcinaRowCallBackHandler rowCallBackHandler = new VakcinaRowCallBackHandler();
-            jdbcTemplate.query(query, rowCallBackHandler);
-            return rowCallBackHandler.getVakcine();
-        }
+        vakcine.sort((v1, v2) -> {
+            if (sort.equals("imeASC")) {
+                return v1.getIme().compareTo(v2.getIme());
+            } else if (sort.equals("imeDESC")) {
+                return v2.getIme().compareTo(v1.getIme());
+            } else if (sort.equals("kolicinaASC")) {
+                return Integer.compare(v1.getDostupnaKolicina(), v2.getDostupnaKolicina());
+            } else if (sort.equals("kolicinaDESC")) {
+                return Integer.compare(v2.getDostupnaKolicina(), v1.getDostupnaKolicina());
+            } else if (sort.equals("proizvodjacASC")) {
+                return v1.getProizvodjac().getProizvodjac().compareTo(v2.getProizvodjac().getProizvodjac());
+            } else if (sort.equals("proizvodjacDESC")) {
+                return v2.getProizvodjac().getProizvodjac().compareTo(v1.getProizvodjac().getProizvodjac());
+            } else if (sort.equals("drzavaProizvodjacaASC")) {
+                return v1.getProizvodjac().getDrzavaProizvodnje().compareTo(v2.getProizvodjac().getDrzavaProizvodnje());
+            } else if (sort.equals("drzavaProizvodjacaDESC")) {
+                return v2.getProizvodjac().getDrzavaProizvodnje().compareTo(v1.getProizvodjac().getDrzavaProizvodnje());
+            }
+            return 0;
+        });
+
+        return vakcine;
     }
+
+
 
     @Override
     public List<Vakcina> findSveVakcine() {
-        String query = "SELECT id, ime, dostupnaKolicina, proizvodjacVakcineId FROM vakcine " +
-                        "WHERE jeObrisan = 0 " +
+        System.out.println("Pozvan je findSveVakcine");
+        String query = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId, p.proizvodjac FROM vakcine v, proizvodjaciVakcine p " +
+                        "WHERE v.proizvodjacVakcineId = p.id AND v.jeObrisan = 0 " +
                         "ORDER BY id";
 
         VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();

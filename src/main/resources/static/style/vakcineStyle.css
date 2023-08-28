@@ -1,0 +1,64 @@
+/* Podesite ovaj stil prema vašim potrebama */
+.table-container {
+    margin: 20px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+td a {
+    color: #007bff;
+}
+
+td a:hover {
+    color: #0056b3;
+}
+
+.search-container {
+    margin: 20px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    background-color: #f9f9f9;
+}
+
+.search-container h2 {
+    margin-bottom: 10px;
+}
+
+.search-container form {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.search-container input,
+.search-container select,
+.search-container button {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.search-container button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background-color: #0056b3;
+}

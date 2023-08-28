@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vakcine</title>
+    <link rel="stylesheet" th:href="@{/style/pocetnaStyle.css}">
+    <link rel="stylesheet" th:href="@{/style/vakcineStyle.css}">
+    <script th:src="@{/js/vakcine.js}"></script>
+    <base href="/eUprava/">
+</head>
+<body>
+<div class="header">
+  <h1>eUprava - <i>Vakcine</i></h1>
+  <a class="odjava-btn" href="korisnici/odjava">Odjavi se</a>
+</div>
+<nav class="nav-bar">
+  <ul>
+    <li><a th:href="@{korisnici/pocetna}">Početna</a></li>
+    <li><a th:href="@{vakcine}">Vakcine</a></li>
+    <li><a th:href="@{korisnici/profil}">Profil</a></li>
+  </ul>
+</nav>
+<p style="position: absolute; top: 0; right: 0; margin: 5px;" id="korisnik"><span th:text="${#httpSession.getAttribute('korisnik').email}"></span></p>
+
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>Ime vakcine</th>
+            <th>Dostupna količina</th>
+            <th>Naziv proizvođača</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vakcina : ${vakcine}">
+            <td><a th:href="@{/vakcine/{id}(id=${vakcina.id})}" th:text="${vakcina.ime}"></a></td>
+            <td th:text="${vakcina.dostupnaKolicina}"></td>
+            <td th:text="${vakcina.proizvodjac.proizvodjac}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="search-container">
+    <h2>Pretraga vakcina</h2>
+    <form th:action="@{/vakcine}" method="get">
+        <select id="kriterijum" name="kriterijum">
+            <option value="ime">Naziv vakcine</option>
+            <option value="proizvodjac">Naziv proizvođača</option>
+            <option value="drzava">Država proizvođača</option>
+            <option value="kolicina">Dostupna količina</option>
+        </select>
+        <input type="text" name="vrednost" placeholder="Unesite vrednost">
+
+        <!-- Dodajte ovde polja za minimalnu i maksimalnu količinu -->
+        <input type="number" name="minKolicina" id="minKolicina" placeholder="Min količina">
+        <input type="number" name="maxKolicina" id="maxKolicina" placeholder="Max količina">
+
+        <label for="sortiranje">Sortiranje:</label>
+        <select id="sortiranje" name="sortiranje">
+            <option value="imeASC">Ime vakcine (rastuće)</option>
+            <option value="imeDESC">Ime vakcine (opadajuće)</option>
+            <option value="proizvodjacASC">Naziv proizvođača (rastuće)</option>
+            <option value="proizvodjacDESC">Naziv proizvođača (opadajuće)</option>
+            <option value="drzavaProizvodjacaASC">Država proizvođača (rastuće)</option>
+            <option value="drzavaProizvodjacaDESC">Država proizvođača (opadajuće)</option>
+            <option value="kolicinaASC">Dostupna količina (rastuće)</option>
+            <option value="kolicinaDESC">Dostupna količina (opadajuće)</option>
+        </select>
+
+        <button type="submit">Pretraži</button>
+    </form>
+</div>
+
+</body>
+</html>
