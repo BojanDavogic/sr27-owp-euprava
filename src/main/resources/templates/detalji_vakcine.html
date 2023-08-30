@@ -27,7 +27,7 @@
   <p>Drzava proizvođača: <span th:text="${vakcina.proizvodjac.drzavaProizvodnje}"></span></p>
 </div>
 
-<form th:action="@{/vakcine/izmeni/{vakcinaId}(vakcinaId=${vakcina.id})}" method="post">
+<form th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).Administrator}" th:action="@{/vakcine/izmeni/{vakcinaId}(vakcinaId=${vakcina.id})}" method="post">
   <h2>Izmena podataka o vakcini</h2>
   <input type="hidden" name="id" th:value="${vakcina.id}">
   <input type="hidden" id="proizvodjacVakcineId" name="proizvodjacVakcineId" th:value="${vakcina.proizvodjac.id}">

@@ -2,6 +2,7 @@ package com.eUprava.dao.impl;
 
 import com.eUprava.dao.ProizvodjacVakcineDAO;
 import com.eUprava.dao.VakcinaDAO;
+import com.eUprava.model.Korisnik;
 import com.eUprava.model.ProizvodjacVakcine;
 import com.eUprava.model.Vakcina;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +64,6 @@ public class VakcinaDAOImpl implements VakcinaDAO {
 
     @Override
     public List<Vakcina> findVakcinaByNaziv(String naziv) {
-        System.out.println("Pozvan je findVakcinaByNaziv");
-        System.out.println("Naziv vakcine " + naziv);
         String query = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId, v.jeObrisan FROM vakcine v, proizvodjaciVakcine p " +
                 "WHERE v.ime = ? AND v.jeObrisan = 0 " +
                 "ORDER BY v.id";
@@ -77,8 +76,6 @@ public class VakcinaDAOImpl implements VakcinaDAO {
 
     @Override
     public List<Vakcina> findVakcinaByNazivProizvodjaca(String nazivProizvodjaca) {
-        System.out.println("Pozvan je findVakcinaByNazivProizvodjaca");
-        System.out.println("Naziv proizvodjaca " + nazivProizvodjaca);
         String query = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId, v.jeObrisan, p.proizvodjac FROM vakcine v, proizvodjaciVakcine p " +
                 "WHERE v.proizvodjacVakcineId = p.id  AND p.proizvodjac = ? AND v.jeObrisan = 0 " +
                 "ORDER BY v.id";
@@ -91,8 +88,6 @@ public class VakcinaDAOImpl implements VakcinaDAO {
 
     @Override
     public List<Vakcina> findVakcinaByDrzava(String drzavaProizvodnje) {
-        System.out.println("Pozvan je findVakcinaByDrzava");
-        System.out.println("Drzava proizvodnje " + drzavaProizvodnje);
         String query = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId, v.jeObrisan, p.drzavaProizvodnje FROM vakcine v, proizvodjaciVakcine p " +
                 "WHERE v.proizvodjacVakcineId = p.id  AND p.drzavaProizvodnje = ? AND v.jeObrisan = 0 " +
                 "ORDER BY v.id";
@@ -105,8 +100,6 @@ public class VakcinaDAOImpl implements VakcinaDAO {
 
     @Override
     public List<Vakcina> findVakcinaByKolicina(int minKolicina, int maxKolicina) {
-        System.out.println("Pozvan je findVakcinaByKolicina");
-        System.out.println("Min Kolicina " + minKolicina + " Max kolicina " + maxKolicina);
         ArrayList<Object> listaArgumenata = new ArrayList<>();
 
         String query = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId, v.jeObrisan FROM vakcine v";
@@ -133,7 +126,6 @@ public class VakcinaDAOImpl implements VakcinaDAO {
             query=query + whereQuery.toString() + " ORDER BY v.id";
         else
             query=query + " ORDER BY v.id";
-        System.out.println(query);
 
         VakcinaRowCallBackHandler vakcinaRowCallBackHandler = new VakcinaRowCallBackHandler();
         jdbcTemplate.query(query, listaArgumenata.toArray(), vakcinaRowCallBackHandler);
@@ -143,8 +135,6 @@ public class VakcinaDAOImpl implements VakcinaDAO {
 
     @Override
     public List<Vakcina> sortVakcine(List<Vakcina> vakcine, String sort) {
-        System.out.println("Pozvan je sortVakcine");
-        System.out.println(sort + " Sortiranje");
 
         vakcine.sort((v1, v2) -> {
             if (sort.equals("imeASC")) {
@@ -174,7 +164,6 @@ public class VakcinaDAOImpl implements VakcinaDAO {
 
     @Override
     public List<Vakcina> findSveVakcine() {
-        System.out.println("Pozvan je findSveVakcine");
         String query = "SELECT v.id, v.ime, v.dostupnaKolicina, v.proizvodjacVakcineId, p.proizvodjac FROM vakcine v, proizvodjaciVakcine p " +
                         "WHERE v.proizvodjacVakcineId = p.id AND v.jeObrisan = 0 " +
                         "ORDER BY id";
@@ -184,6 +173,7 @@ public class VakcinaDAOImpl implements VakcinaDAO {
 
         return vakcinaRowCallBackHandler.getVakcine();
     }
+
     @Transactional
     @Override
     public Boolean save(Vakcina vakcina) {

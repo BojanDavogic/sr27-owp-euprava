@@ -34,4 +34,15 @@ document.addEventListener("DOMContentLoaded", function() {
         btnDodajVakcinu.disabled = true;
         btnDodajVakcinu.style.background = "grey";
     });
+
+    potvrdiPrijava();
 });
+
+function potvrdiPrijava() {
+    if (confirm("Da li zaista želite da pošaljete prijavu za vakcinaciju?")) {
+
+        setTimeout(() => {
+            document.getElementById("prijavaForm").submit();
+        }, 1000);
+    }
+}

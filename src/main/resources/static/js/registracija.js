@@ -1,9 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
 const form = document.getElementById('registrationForm');
-const errorMessageRow = document.getElementById('greskaRow');
-const errorMessage = document.getElementById('greska');
-
 const registracijaDugme = document.getElementById("btnRegistracija");
 
 let email = document.getElementById("emailRegistracija");
@@ -95,46 +92,4 @@ registracijaDugme.addEventListener("click", function (e) {
         }, 1000);
     }
 })
-
-// form.addEventListener('submit', function (event) {
-//     let errors = false;
-//
-//     if(lozinkaPotvrdaInput.value !== lozinkaInput.value) {
-//         errorMessage.textContent = "Lozinke se ne podudaraju";
-//         errors = true;
-//     }
-//
-//     // Validacija za email, ime, prezime, jmbg, adresa i brojTelefona
-//     if (!form.email.value.trim()) {
-//         errorMessage.textContent = "Unesite email";
-//         errors = true;
-//     }
-//     if (!form.ime.value.trim()) {
-//         errorMessage.textContent = "Unesite ime";
-//         errors = true;
-//     }
-//     if (!form.prezime.value.trim()) {
-//         errorMessage.textContent = "Unesite prezime";
-//         errors = true;
-//     }
-//     if (!form.jmbg.value.trim()) {
-//         errorMessage.textContent = "Unesite jmbg";
-//         errors = true;
-//     }
-//     if (!form.adresa.value.trim()) {
-//         errorMessage.textContent = "Unesite adresu";
-//         errors = true;
-//     }
-//     if (!form.brojTelefona.value.trim()) {
-//         errorMessage.textContent = "Unesite broj telefona";
-//         errors = true;
-//     }
-//
-//     if (errors == true) {
-//         event.preventDefault(); // Zaustavite slanje forme
-//         errorMessageRow.style.display = 'table-row'; // Prikazivanje reda sa greškom
-//     } else {
-//         errorMessageRow.style.display = 'none'; // Sakrivanje reda sa greškom
-//     }
-// });
 });

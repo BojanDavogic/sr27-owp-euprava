@@ -22,25 +22,6 @@
 </nav>
 <p style="position: absolute; top: 0; right: 0; margin: 5px;" id="korisnik"><span th:text="${#httpSession.getAttribute('korisnik').email}"></span></p>
 
-<div class="table-container">
-    <table>
-        <thead>
-        <tr>
-            <th>Ime vakcine</th>
-            <th>Dostupna količina</th>
-            <th>Naziv proizvođača</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="vakcina : ${vakcine}">
-            <td><a th:href="@{/vakcine/{id}(id=${vakcina.id})}" th:text="${vakcina.ime}"></a></td>
-            <td th:text="${vakcina.dostupnaKolicina}"></td>
-            <td th:text="${vakcina.proizvodjac.proizvodjac}"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
 <div class="search-container">
     <h2>Pretraga vakcina</h2>
     <form th:action="@{/vakcine}" method="get">
@@ -71,7 +52,77 @@
         <button type="submit">Pretraži</button>
     </form>
 </div>
-<div class="dodavanje-vakcine">
+
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>Ime vakcine</th>
+            <th>Dostupna količina</th>
+            <th>Naziv proizvođača</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vakcina : ${vakcine}" th:unless="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).Pacijent and vakcina.dostupnaKolicina <= 0}">
+            <td><a th:href="@{/vakcine/{id}(id=${vakcina.id})}" th:text="${vakcina.ime}"></a></td>
+            <td th:text="${vakcina.dostupnaKolicina}"></td>
+            <td th:text="${vakcina.proizvodjac.proizvodjac}"></td>
+            <td>
+                <form th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).Pacijent}"
+                      th:action="@{/vakcine/prijava}" id="prijavaForm" method="post">
+                    <input type="hidden" name="vakcinaId" th:value="${vakcina.id}">
+                    <div class="button-container">
+                        <button type="submit" onclick="potvrdiPrijava()">Prijava za vakcinu</button>
+                        <p th:if="${duplicateErrorMessage != null and #strings.startsWith(duplicateErrorMessage, 'duplicate_' + vakcina.id)}" th:text="${#strings.substringAfter(duplicateErrorMessage, 'duplicate_' + vakcina.id)}"></p>
+                    </div>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).MedicinskoOsoblje}" class="search-container">
+    <h2>Pretraga prijava</h2>
+    <form th:action="@{/vakcine}" method="get">
+        <input type="text" name="ime" placeholder="Ime">
+        <input type="text" name="prezime" placeholder="Prezime">
+        <input type="text" name="jmbg" placeholder="JMBG">
+        <button type="submit">Pretraži</button>
+    </form>
+</div>
+
+<div th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).MedicinskoOsoblje}" class="table-container">
+    <h2>Prijave za vakcinaciju</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Pacijent</th>
+            <th>JMBG</th>
+            <th>Vakcina</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="prijava : ${prijaveZaVakcinaciju}" th:data-id="${prijava.id}">
+            <td th:text="${prijava.pacijent.ime} + ' ' + ${prijava.pacijent.prezime}"></td>
+            <td th:text="${prijava.pacijent.jmbg}"></td>
+            <td th:text="${prijava.vakcina.ime}"></td>
+            <td>
+                <form th:action="@{/vakcine/dajVakcinu}" id="dajVakcinuForm" method="post">
+                    <input type="hidden" name="prijavaId" th:value="${prijava.id}">
+                    <button type="submit">Daj vakcinu</button>
+                    <p th:if="${duplicateErrorMessage != null and #strings.startsWith(duplicateErrorMessage, 'duplicate_' + prijava.id)}" th:text="${#strings.substringAfter(duplicateErrorMessage, 'duplicate_' + prijava.id)}"></p>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).Administrator}" class="dodavanje-vakcine">
     <h2>Dodavanje nove vakcine</h2>
     <form id="formaDodajVakcinu" th:action="@{/vakcine/dodaj}" method="post">
         <label for="imeVakcine">Ime vakcine:</label>
@@ -96,7 +147,5 @@
         </form>
     </div>
 </div>
-
-
 </body>
 </html>

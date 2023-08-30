@@ -64,9 +64,10 @@ CREATE TABLE eUprava.PrimljeneDoze (
     doza INT NOT NULL,
     datumIVremeDobijanjaDoze DATETIME NOT NULL,
     pacijentId BIGINT NOT NULL,
+    vakcinaId BIGINT NOT NULL,
     jeObrisan BOOLEAN NOT NULL,
-    FOREIGN KEY (pacijentId) REFERENCES Korisnici (id)
-    ON DELETE CASCADE,
+    FOREIGN KEY (pacijentId) REFERENCES Korisnici (id) ON DELETE CASCADE,
+    FOREIGN KEY (vakcinaId) REFERENCES Vakcine(id) ON DELETE CASCADE,
     PRIMARY KEY (id)
 );
 
@@ -90,7 +91,7 @@ CREATE TABLE eUprava.NabavkaVakcina (
 
 
 CREATE TABLE eUprava.PrijaveZaVakcine(
-	id BIGINT NOT NULL,
+	id BIGINT AUTO_INCREMENT,
     datumIVremePrijave DATETIME NOT NULL,
     pacijentId BIGINT NOT NULL,
     vakcinaId BIGINT NOT NULL,
@@ -117,7 +118,7 @@ INSERT INTO eUprava.Vesti VALUES (1, 'Obavestenje', 'Mole se svi gradjani da se 
 
 INSERT INTO eUprava.VestiOObolelima VALUES (1, 12, 60, 20, 2, now(), false);
 
-INSERT INTO eUprava.PrimljeneDoze VALUES(1, 1, now(), 3, false);
+INSERT INTO eUprava.PrimljeneDoze VALUES(1, 1, now(), 3, 1, false);
 
 INSERT INTO eUprava.NabavkaVakcina VALUES (1, 500, 'Nestasica', now(), 2, 1, 'Nedovoljan broj podataka', 'Odbijen', false);
 

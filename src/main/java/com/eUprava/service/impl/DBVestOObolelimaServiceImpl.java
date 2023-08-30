@@ -7,9 +7,10 @@ import com.eUprava.model.VestOObolelima;
 import com.eUprava.service.VestOObolelimaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-@Controller
+@Service
 public class DBVestOObolelimaServiceImpl implements VestOObolelimaService {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
