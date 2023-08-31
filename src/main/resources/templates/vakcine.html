@@ -73,7 +73,7 @@
                       th:action="@{/vakcine/prijava}" id="prijavaForm" method="post">
                     <input type="hidden" name="vakcinaId" th:value="${vakcina.id}">
                     <div class="button-container">
-                        <button type="submit" onclick="potvrdiPrijava()">Prijava za vakcinu</button>
+                        <button type="submit">Prijava za vakcinu</button>
                         <p th:if="${duplicateErrorMessage != null and #strings.startsWith(duplicateErrorMessage, 'duplicate_' + vakcina.id)}" th:text="${#strings.substringAfter(duplicateErrorMessage, 'duplicate_' + vakcina.id)}"></p>
                     </div>
                 </form>
@@ -147,5 +147,113 @@
         </form>
     </div>
 </div>
+
+<div th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).MedicinskoOsoblje}" class="form-container">
+    <h2>Kreiranje zahteva za nabavku vakcina</h2>
+    <form th:action="@{/vakcine/nabavka-forma}" method="post">
+        <label for="vakcina">Izaberite vakcinu:</label>
+        <select id="vakcina" name="vakcina" required>
+            <option th:each="vakcina : ${vakcine}" th:value="${vakcina.id}" th:text="${vakcina.ime}"></option>
+        </select>
+
+        <label for="kolicina">Količina:</label>
+        <input type="number" id="kolicina" name="kolicina" required>
+
+        <label for="razlog">Razlog nabavke:</label>
+        <textarea id="razlog" name="razlog" required></textarea>
+
+        <button type="submit">Kreiraj zahtev</button>
+    </form>
+</div>
+
+<div th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).Administrator}" class="admin-container">
+    <h2>Zahtevi za nabavku vakcina</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Vakcina</th>
+            <th>Količina</th>
+            <th>Razlog nabavke</th>
+            <th>Status</th>
+            <th>Opcije</th>
+        </tr>
+        <tr th:each="zahtev : ${zahtevi}">
+            <td th:text="${zahtev.id}"></td>
+            <td th:text="${zahtev.vakcina.ime}"></td>
+            <td th:text="${zahtev.kolicinaVakcina}"></td>
+            <td th:text="${zahtev.razlogNabavke}"></td>
+            <td th:text="${zahtev.status}"></td>
+            <td>
+                <form th:action="@{/admin/odobri-zahtev}" method="post">
+                    <input type="hidden" name="zahtevId" th:value="${zahtev.id}">
+                    <button type="submit">Odobri</button>
+                </form>
+                <form th:action="@{/admin/odbij-zahtev}" method="post">
+                    <input type="hidden" name="zahtevId" th:value="${zahtev.id}">
+                    <input type="text" name="razlogOdbijanja" placeholder="Razlog odbijanja">
+                    <button type="submit">Odbij</button>
+                </form>
+                <form th:action="@{/admin/vrati-na-reviziju}" method="post">
+                    <input type="hidden" name="zahtevId" th:value="${zahtev.id}">
+                    <input type="text" name="komentar" placeholder="Komentar za reviziju">
+                    <button type="submit">Vrati na reviziju</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).MedicinskoOsoblje}" class="table-container">
+    <h2>Odbijeni zahtevi za nabavku</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Vakcina</th>
+            <th>Razlog odbijanja</th>
+            <th>Status</th>
+        </tr>
+        <tr th:each="zahtev : ${odbijeniZahtevi}">
+            <td th:text="${zahtev.id}"></td>
+            <td th:text="${zahtev.vakcina.ime}"></td>
+            <td th:text="${zahtev.razlogOdbijanjaZahteva}"></td>
+            <td th:text="${zahtev.status}"></td>
+        </tr>
+    </table>
+</div>
+
+<div th:if="${#httpSession.getAttribute('korisnik').uloga == T(com.eUprava.model.Uloga).MedicinskoOsoblje}" class="table-container">
+    <h2>Zahtevi vraćeni na reviziju</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Kolicina</th>
+            <th>Razlog nabavke</th>
+            <th>Vakcina</th>
+            <th>Razlog odbijanja</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        <tr th:each="zahtev : ${zahteviZaReviziju}">
+            <form class="edit-form" th:action="@{/admin/nabavka-azuriranje}" method="post">
+                <td th:text="${zahtev.id}"></td>
+                <td>
+                    <input type="number" name="novaKolicina" th:value="${zahtev.kolicinaVakcina}">
+                </td>
+                <td>
+                    <input type="text" name="noviRazlog" th:value="${zahtev.razlogNabavke}">
+                </td>
+                <td th:text="${zahtev.vakcina.ime}"></td>
+                <td th:text="${zahtev.razlogOdbijanjaZahteva}"></td>
+                <td th:text="${zahtev.status}"></td>
+                <td>
+                    <input type="hidden" name="zahtevId" th:value="${zahtev.id}">
+                    <button type="submit" class="edit-button">Potvrdi izmenu</button>
+                </td>
+            </form>
+        </tr>
+    </table>
+</div>
+
+
 </body>
 </html>

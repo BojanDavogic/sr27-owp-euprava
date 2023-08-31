@@ -35,14 +35,14 @@ document.addEventListener("DOMContentLoaded", function() {
         btnDodajVakcinu.style.background = "grey";
     });
 
-    potvrdiPrijava();
+    // potvrdiPrijava();
 });
 
-function potvrdiPrijava() {
-    if (confirm("Da li zaista želite da pošaljete prijavu za vakcinaciju?")) {
-
-        setTimeout(() => {
-            document.getElementById("prijavaForm").submit();
-        }, 1000);
-    }
-}
+// function potvrdiPrijava() {
+//     if (confirm("Da li zaista želite da pošaljete prijavu za vakcinaciju?")) {
+//
+//         setTimeout(() => {
+//             document.getElementById("prijavaForm").submit();
+//         }, 1000);
+//     }
+// }

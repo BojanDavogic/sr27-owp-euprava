@@ -1,10 +1,7 @@
 package com.eUprava.controller;
 
 import com.eUprava.model.*;
-import com.eUprava.service.PrijavaZaVakcinuService;
-import com.eUprava.service.PrimljenaDozaService;
-import com.eUprava.service.ProizvodjacVakcineService;
-import com.eUprava.service.VakcinaService;
+import com.eUprava.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +27,9 @@ public class VakcinaController {
 
     @Autowired
     private PrimljenaDozaService primljenaDozaService;
+
+    @Autowired
+    private NabavkaVakcineService nabavkaVakcineService;
 
     @GetMapping(value = "/vakcine")
     public String vakcineStranica(
@@ -87,6 +87,15 @@ public class VakcinaController {
 
         List<ProizvodjacVakcine> proizvodjaciVakcineList = proizvodjacVakcineService.findSviProizvodjaciVakcine();
         model.addAttribute("proizvodjaci", proizvodjaciVakcineList);
+
+        List<NabavkaVakcine> zahtevi = nabavkaVakcineService.findSveNabavkeVakcineNaCekanju();
+        model.addAttribute("zahtevi", zahtevi);
+
+        List<NabavkaVakcine> odbijeniZahtevi = nabavkaVakcineService.findSveOdbijeneNabavkeVakcine();
+        model.addAttribute("odbijeniZahtevi", odbijeniZahtevi);
+
+        List<NabavkaVakcine> zahteviZaReviziju = nabavkaVakcineService.findSveNabavkeVakcineNaReviziji();
+        model.addAttribute("zahteviZaReviziju", zahteviZaReviziju);
 
         return "vakcine.html";
     }

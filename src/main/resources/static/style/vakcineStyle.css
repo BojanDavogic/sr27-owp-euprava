@@ -198,3 +198,105 @@ td a:hover {
     background-color: #0056b3;
 }
 
+.form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f7f7f7;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.form-container label {
+    font-size: 16px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-container select,
+.form-container input[type="number"],
+.form-container textarea {
+    width: 95%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 12px;
+    resize: none;
+}
+
+.form-container select {
+    width: 100%;
+}
+
+.form-container button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.form-container button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Stilizacija za prikaz zahteva za nabavku */
+.admin-container {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.admin-container th, .admin-container td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.admin-container th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.admin-container tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.admin-container button, .edit-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.admin-container input[type="text"] {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    width: 150px;
+}
+
+.admin-container button:hover, .edit-button:hover {
+    background-color: #0056b3;
+}
+
+
+
